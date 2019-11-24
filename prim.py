@@ -27,7 +27,7 @@ class Grafo:
         vecinos_lista = np.where(aristas_finitas.tolist())[1]
         return vecinos_lista
 
-    def generate_weights(self):
+    def generate_edges(self):
         rv = set()
         for i in self.adyacencias.items():
             aristas_i = [frozenset([i[0], j]) for j in i[1]]
@@ -36,33 +36,27 @@ class Grafo:
 
 grafo = Grafo(DEFAULT_WEIGHT_MATRIX_1)
 
-def prim(grafo, pesos=None):
-    no_visitados_list = list(grafo.vertices)
-    n = len(no_visitados_list)
+def prim(grafo):
+    no_visitados_l = list(grafo.vertices)
+    n = len(no_visitados_l)
     g = [np.inf] * n
     g[0] = 0
-    dist_vecinos = []
-    rv = []
-    e = grafo.generate_weights()
-    while len(no_visitados_list) > 0:
+    rv = set()
+    while len(no_visitados_l) > 0:
         ix = np.argmin(g)
-        no_visitados_list.remove(ix)
-        if ix != 0:
-            vecinos_ix = grafo.vecinos(ix)
-            dist_vecinos = [grafo.adj_m[ixgenerate_weights]]
-            rv.append(grafo.vecinos(ix))
-            ## cambiar usando e  arbol.vertices.append(grafo.vertices[ix])
-        # adyacencias_ix = grafo.adyacencias[ix]
-        # aristas_no_visitadas = [*set(adyacencias_ix) - set(visitados), ]
+        no_visitados_l.remove(ix)
+        vecinos_ix = grafo.vecinos(ix)
+        if ix != 1:
+            vecino_mas_cercano = grafo.adj_m[ix].argmin()
+            rv.union({ix,vecino_mas_cercano})
 
-
-        breakpoint()
-        for j in no_visitados_list:
+        for j in set(no_visitados_l).intersection(vecinos_ix):
+            print(no_visitados_l)
             if g[j] > grafo.adj_m[ix, j]:
                 g[j] = grafo.adj_m[ix, j]
-                dist_vecinos[j] = [ix, j]
+                # dist_vecinos[j] = [ix, j]
 
-        return rv
+    return rv
 
 
 # costo = [np.inf, np.inf, np.inf ,np.inf, np.inf, np.inf, np.inf]
