@@ -21,4 +21,6 @@ def floyd(n, w_m):
 
    
 if __name__ == "__main__":
-    floyd_warshall(DEFAULT_WEIGHT_MATRIX_1, directed=False, return_predecessors=True)
+    d, p = floyd_warshall(DEFAULT_WEIGHT_MATRIX_1, directed=False, return_predecessors=True)
+    print(d)
+    print(p)

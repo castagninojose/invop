@@ -1,5 +1,4 @@
 import numpy as np
-import pandas as pd
 
 from collections import defaultdict
 
@@ -12,7 +11,6 @@ DEFAULT_WEIGHT_MATRIX_1 = np.matrix(
     [np.inf, np.inf, 6, 7, 8, np.inf, 9],
     [np.inf, np.inf, np.inf ,np.inf, np.inf, 9, np.inf]]
 )
-
 
 class Grafo:
     
@@ -36,25 +34,34 @@ class Grafo:
 
 grafo = Grafo(DEFAULT_WEIGHT_MATRIX_1)
 
-def prim(grafo):
-    no_visitados_l = list(grafo.vertices)
-    n = len(no_visitados_l)
-    g = [np.inf] * n
-    g[0] = 0
-    rv = set()
-    while len(no_visitados_l) > 0:
-        ix = np.argmin(g)
-        no_visitados_l.remove(ix)
-        vecinos_ix = grafo.vecinos(ix)
-        if ix != 1:
-            vecino_mas_cercano = grafo.adj_m[ix].argmin()
-            rv.union({ix,vecino_mas_cercano})
+def ix_min(key, vis_l):
+    
+    k_array = np.array(key)
+    k_array[vis_l] = np.inf
+    return np.argmin(k_array)
 
-        for j in set(no_visitados_l).intersection(vecinos_ix):
-            print(no_visitados_l)
-            if g[j] > grafo.adj_m[ix, j]:
-                g[j] = grafo.adj_m[ix, j]
-                # dist_vecinos[j] = [ix, j]
+
+def prim(grafo):
+    n = 7
+    visitados = [False] * n
+    key = [np.inf] * n
+    parents = [-1] * n
+    key[0] = 0
+    rv = set()
+    while sum(visitados) < n:
+        ix = ix_min(key, visitados)
+        print(f'indice: {ix}')
+        visitados[ix] = True
+        vecinos_ix = grafo.vecinos(ix)
+        if ix != 0:
+            vecino_mas_cercano = grafo.adj_m[ix].argmin()
+            rv = rv.union({ix,vecino_mas_cercano})
+        breakpoint()
+        for j in vecinos_ix:
+            if not visitados[j]:
+                if key[j] > grafo.adj_m[ix, j]:
+                    key[j] = grafo.adj_m[ix, j]
+                    parents[j] = [ix, j]
 
     return rv
 
@@ -65,5 +72,6 @@ def prim(grafo):
 # vertice_cero = 'a'
 
 if __name__ == "__main__":
-    prim(grafo)
+    print(prim(grafo))
+
     # grafo.adyacencias(1)
