@@ -41,29 +41,35 @@ def ix_min(key, vis_l):
     return np.argmin(k_array)
 
 
-def prim(grafo):
-    n = 7
-    visitados = [False] * n
-    key = [np.inf] * n
-    parents = [-1] * n
+def prim(G):
+    grafo = Grafo(G)
+    n = len(grafo.vertices)
+    visitados = np.array([False] * n)
+    key = np.array([np.inf] * n)
+    parents = np.array([-1] * n)
     key[0] = 0
-    rv = set()
-    while sum(visitados) < n:
+    rv = [0]
+    weights_rv = 0
+    while sum(visitados) < (n-1):
         ix = ix_min(key, visitados)
-        print(f'indice: {ix}')
         visitados[ix] = True
-        vecinos_ix = grafo.vecinos(ix)
         if ix != 0:
-            vecino_mas_cercano = grafo.adj_m[ix].argmin()
-            rv = rv.union({ix,vecino_mas_cercano})
-        breakpoint()
-        for j in vecinos_ix:
-            if not visitados[j]:
-                if key[j] > grafo.adj_m[ix, j]:
-                    key[j] = grafo.adj_m[ix, j]
-                    parents[j] = [ix, j]
+            vecino_mas_cercano = grafo.adj_m[ix, ~visitados].argmin()
+            rv.append(ix)
+            parents[ix] = vecino_mas_cercano
+            weights_rv = weights_rv + vecino_mas_cercano
+        
+        vecinos_ix = grafo.vecinos(ix)
+        for jh in vecinos_ix:
+            if not visitados[jh]:
+                if key[jh] > grafo.adj_m[ix, jh]:
+                    key[jh] = grafo.adj_m[ix, jh]
+                    parents[jh] = jh
 
-    return rv
+    rv.append(np.argmin(visitados))
+    weights_rv = weights_rv + grafo.adj_m[ix, np.argmin(visitados)]
+
+    return rv , weights_rv
 
 
 # costo = [np.inf, np.inf, np.inf ,np.inf, np.inf, np.inf, np.inf]
