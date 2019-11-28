@@ -1,18 +1,8 @@
 import numpy as np
-import pandas as pd
 
 from collections import defaultdict
 
-DEFAULT_WEIGHT_MATRIX_1 = np.matrix(
-    [[np.inf, 2, 3, 3, np.inf,np.inf,np.inf],
-    [2, np.inf, 4, np.inf, 3, np.inf, np.inf],
-    [3, 4, np.inf, 5, 1, 6, np.inf],
-    [3, np.inf, 5, np.inf, np.inf, 7, np.inf],
-    [np.inf, np.inf,1, np.inf, np.inf, 8, np.inf],
-    [np.inf, np.inf, 6, 7, 8, np.inf, 9],
-    [np.inf, np.inf, np.inf ,np.inf, np.inf, 9, np.inf]]
-)
-
+from constants import DEFAULT_WEIGHT_MATRIX_1
 
 class Grafo:
     
@@ -27,7 +17,7 @@ class Grafo:
         vecinos_lista = np.where(aristas_finitas.tolist())[1]
         return vecinos_lista
 
-    def generate_weights(self):
+    def generate_edges(self):
         rv = set()
         for i in self.adyacencias.items():
             aristas_i = [frozenset([i[0], j]) for j in i[1]]
@@ -36,33 +26,48 @@ class Grafo:
 
 grafo = Grafo(DEFAULT_WEIGHT_MATRIX_1)
 
-def prim(grafo, pesos=None):
-    no_visitados_list = list(grafo.vertices)
-    n = len(no_visitados_list)
-    g = [np.inf] * n
-    g[0] = 0
-    dist_vecinos = []
+def ix_min(key, vis_l):
+    
+    k_array = np.array(key)
+    k_array[vis_l] = np.inf
+    return np.argmin(k_array)
+
+def vecino_mas_cercano(dist_row, vis_l):
+    dist_r = dist_row.copy()
+    dist_r[:,vis_l] = np.inf
+    return dist_r.argmin()
+
+
+def prim(G):
+    grafo = Grafo(G)
+    n = len(grafo.vertices)
+    visitados = np.array([False] * n)
+    key = np.array([np.inf] * n)
+    parents = np.array([-1] * n)
+    key[0] = 0
     rv = []
-    e = grafo.generate_weights()
-    while len(no_visitados_list) > 0:
-        ix = np.argmin(g)
-        no_visitados_list.remove(ix)
+    weights_rv = 0
+    while sum(visitados) < (n-1):
+        ix = ix_min(key, visitados)
+        visitados[ix] = True
         if ix != 0:
-            vecinos_ix = grafo.vecinos(ix)
-            dist_vecinos = [grafo.adj_m[ixgenerate_weights]]
-            rv.append(grafo.vecinos(ix))
-            ## cambiar usando e  arbol.vertices.append(grafo.vertices[ix])
-        # adyacencias_ix = grafo.adyacencias[ix]
-        # aristas_no_visitadas = [*set(adyacencias_ix) - set(visitados), ]
+            vmc = vecino_mas_cercano(grafo.adj_m[ix], visitados)
+            rv.append([ix, vmc])
+            parents[ix] = vmc
+            weights_rv = weights_rv + grafo.adj_m[ix, vmc]
+            
+        breakpoint () 
+        vecinos_ix = grafo.vecinos(ix)
+        for jh in vecinos_ix:
+            if not visitados[jh]:
+                if key[jh] > grafo.adj_m[ix, jh]: 
+                    key[jh] = grafo.adj_m[ix, jh]
+                    parents[jh] = jh
 
+    rv.insert(0, [0, rv[0][0]])
+    weights_rv = weights_rv + grafo.adj_m[ix, np.argmin(visitados)]
 
-        breakpoint()
-        for j in no_visitados_list:
-            if g[j] > grafo.adj_m[ix, j]:
-                g[j] = grafo.adj_m[ix, j]
-                dist_vecinos[j] = [ix, j]
-
-        return rv
+    return rv , weights_rv
 
 
 # costo = [np.inf, np.inf, np.inf ,np.inf, np.inf, np.inf, np.inf]
@@ -71,5 +76,4 @@ def prim(grafo, pesos=None):
 # vertice_cero = 'a'
 
 if __name__ == "__main__":
-    prim(grafo)
-    # grafo.adyacencias(1)
+    print(prim(DEFAULT_WEIGHT_MATRIX_1))
