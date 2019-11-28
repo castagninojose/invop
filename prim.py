@@ -2,15 +2,7 @@ import numpy as np
 
 from collections import defaultdict
 
-DEFAULT_WEIGHT_MATRIX_1 = np.matrix(
-    [[np.inf, 2, 3, 3, np.inf,np.inf,np.inf],
-    [2, np.inf, 4, np.inf, 3, np.inf, np.inf],
-    [3, 4, np.inf, 5, 1, 6, np.inf],
-    [3, np.inf, 5, np.inf, np.inf, 7, np.inf],
-    [np.inf, np.inf,1, np.inf, np.inf, 8, np.inf],
-    [np.inf, np.inf, 6, 7, 8, np.inf, 9],
-    [np.inf, np.inf, np.inf ,np.inf, np.inf, 9, np.inf]]
-)
+from constants import DEFAULT_WEIGHT_MATRIX_1
 
 class Grafo:
     
@@ -40,6 +32,11 @@ def ix_min(key, vis_l):
     k_array[vis_l] = np.inf
     return np.argmin(k_array)
 
+def vecino_mas_cercano(dist_row, vis_l):
+    dist_r = dist_row.copy()
+    dist_r[:,vis_l] = np.inf
+    return dist_r.argmin()
+
 
 def prim(G):
     grafo = Grafo(G)
@@ -48,25 +45,26 @@ def prim(G):
     key = np.array([np.inf] * n)
     parents = np.array([-1] * n)
     key[0] = 0
-    rv = [0]
+    rv = []
     weights_rv = 0
     while sum(visitados) < (n-1):
         ix = ix_min(key, visitados)
         visitados[ix] = True
         if ix != 0:
-            vecino_mas_cercano = grafo.adj_m[ix, ~visitados].argmin()
-            rv.append(ix)
-            parents[ix] = vecino_mas_cercano
-            weights_rv = weights_rv + vecino_mas_cercano
-        
+            vmc = vecino_mas_cercano(grafo.adj_m[ix], visitados)
+            rv.append([ix, vmc])
+            parents[ix] = vmc
+            weights_rv = weights_rv + grafo.adj_m[ix, vmc]
+            
+        breakpoint () 
         vecinos_ix = grafo.vecinos(ix)
         for jh in vecinos_ix:
             if not visitados[jh]:
-                if key[jh] > grafo.adj_m[ix, jh]:
+                if key[jh] > grafo.adj_m[ix, jh]: 
                     key[jh] = grafo.adj_m[ix, jh]
                     parents[jh] = jh
 
-    rv.append(np.argmin(visitados))
+    rv.insert(0, [0, rv[0][0]])
     weights_rv = weights_rv + grafo.adj_m[ix, np.argmin(visitados)]
 
     return rv , weights_rv
@@ -78,6 +76,4 @@ def prim(G):
 # vertice_cero = 'a'
 
 if __name__ == "__main__":
-    print(prim(grafo))
-
-    # grafo.adyacencias(1)
+    print(prim(DEFAULT_WEIGHT_MATRIX_1))

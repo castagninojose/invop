@@ -28,6 +28,9 @@ def floyd(n, w_m):
 #     [m[]]
 breakpoint()
 def steiner(n, R, matriz_w):
+    d, p = floyd_warshall(
+        DEFAULT_WEIGHT_MATRIX_1, directed=False, return_predecessors=True
+    )
     W = np.inf
     T = []
     H = "Kn"  # grafo completo de n nodos
@@ -48,7 +51,6 @@ def steiner(n, R, matriz_w):
 
    
 if __name__ == "__main__":
-    d, p = floyd_warshall(DEFAULT_WEIGHT_MATRIX_1, directed=False, return_predecessors=True)
     print(d)
     print(p)
     print(steiner(7, [1], DEFAULT_WEIGHT_MATRIX_1))
