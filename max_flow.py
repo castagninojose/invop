@@ -16,12 +16,11 @@ def edge_list_from_matrix(w_m):
     return {i : rv[i] for i in range(len(rv))}
 
 def generate_gp(cap_m=CAPACITY_MATRIX, dem_m=DEMAND_MATRIX, source=0, sink=1):
-    rv = cap_m - dem_m
-    n = len(rv)
-    ed_from_s = [sum(r) for r in dem_m]
-    ed_to_t = [sum(c) for c in dem_m[:,n]]
+    n = len(cap_m)
+    rv = np.zeros((n+2, n+2))
+    rv[0,n] = np.inf
+    rv[2:, 2:] = cap_m - dem_m
     breakpoint()
-    np.c_[rv, np.ones(n)]
     for i in range(n):
         rv[i, n-1] = sum(dem_m[i])
         rv[i, n] = 'sas'
