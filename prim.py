@@ -2,7 +2,7 @@ import numpy as np
 
 from collections import defaultdict
 
-from constants import DEFAULT_WEIGHT_MATRIX_1
+from constants import WEIGHT_MATRIX_1
 
 class Grafo:
     
@@ -24,7 +24,7 @@ class Grafo:
             rv = rv.union(aristas_i)
         return rv
 
-grafo = Grafo(DEFAULT_WEIGHT_MATRIX_1)
+grafo = Grafo(WEIGHT_MATRIX_1)
 
 def ix_min(key, vis_l):
     
@@ -76,4 +76,4 @@ def prim(G):
 # vertice_cero = 'a'
 
 if __name__ == "__main__":
-    print(prim(DEFAULT_WEIGHT_MATRIX_1))
+    print(prim(WEIGHT_MATRIX_1))
