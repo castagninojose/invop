@@ -8,7 +8,6 @@ def edge_dict_from_matrix(w_m):
     for i in range(n):
         for k in range(n):
             if w_m[i,k] < np.inf:
-                # breakpoint()
                 rv.append((i,k))
     
     return {i : rv[i] for i in range(len(rv))}
@@ -25,7 +24,6 @@ def generate_new_cap_m(cap_m=CAPACITY_MATRIX, dem_m=DEMAND_MATRIX, source=0, sin
     
     rvm = np.r_[[s], rvm]
     rvm = np.c_[rvm, np.array(t)]
-    breakpoint()
     vacios_1 = np.empty((1,n+1))*np.nan
     vacios_2 = np.empty((n+2, 1))*np.nan
     rvm = np.r_[rvm, vacios_1]
