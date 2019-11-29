@@ -57,7 +57,4 @@ def steiner(n, R, matriz_w):
    
 if __name__ == "__main__":
     # print(steiner(7, [1], WEIGHT_MATRIX_1))
-    predecesor_np = floyd_warshall(WEIGHT_MATRIX_1, directed=False, return_predecessors=True)[1]
-    predecesor_lp = floyd(7, WEIGHT_MATRIX_1)[1]
-    print(f"Lopiibe: {predecesor_lp}")
-    print(f"Numpaai: {predecesor_np}")
+
