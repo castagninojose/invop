@@ -2,7 +2,7 @@ import numpy as np
 from itertools import combinations
 from scipy.sparse.csgraph import floyd_warshall
 
-# from prim import prim
+from prim import prim
 from constants import WEIGHT_MATRIX_1
 
 
@@ -55,5 +55,5 @@ def steiner(n, R, w_m):
 
    
 if __name__ == "__main__":
-    # print(steiner(7, [1], WEIGHT_MATRIX_1))
-    print(floyd(7, WEIGHT_MATRIX_1))
+    print(steiner(7, [1], WEIGHT_MATRIX_1))
+    # print(floyd(7, WEIGHT_MATRIX_1))
