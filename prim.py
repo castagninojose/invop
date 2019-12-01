@@ -70,31 +70,32 @@ def prim(G):
     weights_rv = sum([grafo.adj_m[l[0]][l[1]] for l in rv])
     return rv , weights_rv
 
-def edged_dict(G):
+def edges_dict(G):
     rv = {}
     for i in range(len(G)):
-        rv.update({(i, j): G[i, j] for j in range(len(G))})
+        rv.update({(i, j): G[i, j] for j in range(len(G)) if j != i})
     return rv
 
 def bellman_ford(G, source):
+    # init
     n = len(G)
-    aristas_d = edged_dict(G)
-    distancias = [-9991] * n
-    predecesor = [np.nan] * n
-    distancias[source] = 0
-    breakpoint()
+    aristas_d = edges_dict(G)
+    d = [float('Inf')] * n
+    p = [-1] * n
+    d[source] = 0
+
+    # relax
     for i in range(n-1):
         for e in aristas_d.keys():
-            if distancias[e[0]] > distancias[e[1]] + aristas_d[e]:
-                distancias[e[1]] = distancias[e[0]] + aristas_d[e]
-                predecesor[e[1]] = e[0]
+            if (d[e[0]] > d[e[1]] + aristas_d[e]):
+                d[e[1]] = d[e[0]] + aristas_d[e]
+                p[e[1]] = e[0]
     
     for e in aristas_d:
-        if distancias[e[1]] > distancias[e[0]]:
-            print(f"Existe ciclo negatio entre {e[0]} y {e[1]}.")
-
-    return distancias, predecesor
+        if (d[e[1]] != float('Inf') and d[e[1]] > d[e[0]]):
+            print(f"Existe ciclo negativo entre {e[0]} y {e[1]}.")
+    return d, p
 
 
 if __name__ == "__main__":
-    print(bellman_ford(CURRENCY_MATRIX, 0))
+    print(bellman_ford(-np.log(CURRENCY_MATRIX), 1))
