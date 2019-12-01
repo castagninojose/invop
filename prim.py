@@ -2,7 +2,7 @@ import numpy as np
 
 from collections import defaultdict
 
-from constants import WEIGHT_MATRIX_1
+from constants import WEIGHT_MATRIX_1, CURRENCY_MATRIX, PAISES_DICT
 
 
 class Grafo:
@@ -13,7 +13,6 @@ class Grafo:
 
     def adyacencias(self):
         return {v : self.vecinos(v) for v in self.vertices}
-        
 
     def vecinos(self, j):
         aristas_finitas = self.adj_m[j,:] < np.inf
@@ -22,12 +21,13 @@ class Grafo:
 
     def generate_edges(self):
         rv = set()
-        for i in self.adyacencias.items():
+        for i in self.adyacencias().items():
             aristas_i = [frozenset([i[0], j]) for j in i[1]]
             rv = rv.union(aristas_i)
         return rv
 
 grafo = Grafo(WEIGHT_MATRIX_1)
+grafo.generate_edges()
 
 def vecinos(G, v):
     aristas_finitas = G[v,:] < np.inf
@@ -70,5 +70,31 @@ def prim(G):
     weights_rv = sum([grafo.adj_m[l[0]][l[1]] for l in rv])
     return rv , weights_rv
 
+def edged_dict(G):
+    rv = {}
+    for i in range(len(G)):
+        rv.update({(i, j): G[i, j] for j in range(len(G))})
+    return rv
+
+def bellman_ford(G, source):
+    n = len(G)
+    aristas_d = edged_dict(G)
+    distancias = [-9991] * n
+    predecesor = [np.nan] * n
+    distancias[source] = 0
+    breakpoint()
+    for i in range(n-1):
+        for e in aristas_d.keys():
+            if distancias[e[0]] > distancias[e[1]] + aristas_d[e]:
+                distancias[e[1]] = distancias[e[0]] + aristas_d[e]
+                predecesor[e[1]] = e[0]
+    
+    for e in aristas_d:
+        if distancias[e[1]] > distancias[e[0]]:
+            print(f"Existe ciclo negatio entre {e[0]} y {e[1]}.")
+
+    return distancias, predecesor
+
+
 if __name__ == "__main__":
-    print(prim(WEIGHT_MATRIX_1))
+    print(bellman_ford(CURRENCY_MATRIX, 0))

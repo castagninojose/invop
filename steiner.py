@@ -1,9 +1,9 @@
 import numpy as np
 from itertools import combinations
-from scipy.sparse.csgraph import floyd_warshall
+from scipy.sparse.csgraph import floyd_warshall, bellman_ford
 
 from prim import prim
-from constants import WEIGHT_MATRIX_1
+from constants import WEIGHT_MATRIX_1, CURRENCY_MATRIX
 
 
 def floyd(n, w_m):
@@ -55,5 +55,7 @@ def steiner(n, R, w_m):
 
    
 if __name__ == "__main__":
-    print(steiner(7, [1], WEIGHT_MATRIX_1))
+    # print(steiner(7, [1], WEIGHT_MATRIX_1))
     # print(floyd(7, WEIGHT_MATRIX_1))
+    breakpoint()
+    print(bellman_ford(-np.log(CURRENCY_MATRIX), indices=1))
