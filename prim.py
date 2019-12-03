@@ -71,6 +71,7 @@ def prim(G):
     return rv , weights_rv
 
 def edges_dict(G):
+    # generate edge dict from weights matrix
     rv = {}
     for i in range(len(G)):
         rv.update({(i, j): G[i, j] for j in range(len(G)) if j != i})
@@ -91,11 +92,28 @@ def bellman_ford(G, source):
                 d[e[1]] = d[e[0]] + aristas_d[e]
                 p[e[1]] = e[0]
     
+    # now look for negative weight cycles
     for e in aristas_d:
         if (d[e[1]] != float('Inf') and d[e[1]] > d[e[0]]):
-            print(f"Existe ciclo negativo entre {e[0]} y {e[1]}.")
+            print(f"Existe ciclo negativo entre.")
+            break
     return d, p
+
+def monet_arbit(G):
+    n = len(G) 
+    v0_to_vi = np.zeros((1, n))
+    all_to_v0 = np.zeros((n+1, 1))
+    breakpoint()
+    H = np.concatenate(G, v0_to_vi)
+    H = np.concatenate(H, all_to_v0, axis=1)
+    for i in range(n+1):
+        bf = bellman_ford(H, n+1)
+        if bf[1]:
+            continue
+
+
 
 
 if __name__ == "__main__":
-    print(bellman_ford(-np.log(CURRENCY_MATRIX), 1))
+    # print(bellman_ford(-np.log(CURRENCY_MATRIX), 1))
+    print(monet_arbit(-np.log(CURRENCY_MATRIX)))

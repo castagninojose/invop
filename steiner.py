@@ -6,7 +6,7 @@ from prim import prim
 from constants import WEIGHT_MATRIX_1, CURRENCY_MATRIX
 
 
-def floyd(n, w_m):
+def floyd_warshall_(n, w_m):
     # init dist & predecesor mx
     d = w_m
     p = np.array([np.repeat(i, n) for i in range(n)])
@@ -16,8 +16,8 @@ def floyd(n, w_m):
         for j in range(n):
             if i != j:
                 d[i,j] = w_m[i,j]
-            else:
-                d[i,j] = 0
+            # else:
+            #     d[i,j] = 0
     
     for k in range(n):
         for i in range(n):
@@ -56,6 +56,6 @@ def steiner(n, R, w_m):
    
 if __name__ == "__main__":
     # print(steiner(7, [1], WEIGHT_MATRIX_1))
-    # print(floyd(7, WEIGHT_MATRIX_1))
-    breakpoint()
-    print(bellman_ford(-np.log(CURRENCY_MATRIX), indices=1))
+    print(floyd_warshall(7, WEIGHT_MATRIX_1))
+    # breakpoint()
+    # print(bellman_ford(-np.log(CURRENCY_MATRIX), indices=1))
