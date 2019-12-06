@@ -1,9 +1,22 @@
 import numpy as np
+import argparse
 from itertools import combinations
-from scipy.sparse.csgraph import floyd_warshall, bellman_ford
+# from scipy.sparse.csgraph import floyd_warshall, bellman_ford
 
-from utils import prim, edges_dict
+from utils import prim, edges_dict, edge_dict_from_matrix
 from constants import WEIGHT_MATRIX_1, CURRENCY_MATRIX
+
+def monet_arbit(G):
+    n = len(G) 
+    v0_to_vi = np.zeros((1, n))
+    all_to_v0 = np.zeros((n+1, 1))
+    breakpoint()
+    H = np.concatenate(G, v0_to_vi)
+    H = np.concatenate(H, all_to_v0, axis=1)
+    for i in range(n+1):
+        bf = bellman_ford(H, n+1)
+        if bf[1]:
+            continue
 
 def edge_dict_from_matrix(w_m):
     # devuelve un diccionario de aristas a partir de una matriz de pesos
@@ -16,7 +29,7 @@ def edge_dict_from_matrix(w_m):
     
     return {i : rv[i] for i in range(len(rv))}
 
-def new_caps_mx(cap_m=CAPACITY_MATRIX, dem_m=DEMAND_MATRIX, source=0, sink=1):
+def max_flow_with_demands(cap_m=CAPACITY_MATRIX, dem_m=DEMAND_MATRIX, source=0, sink=1):
     n = len(cap_m)
     rvm = cap_m - dem_m
     rvm[n-1,0] = np.inf
@@ -36,7 +49,7 @@ def new_caps_mx(cap_m=CAPACITY_MATRIX, dem_m=DEMAND_MATRIX, source=0, sink=1):
     return rvm
 
 
-def _floyd_warshall(n, w_m):
+def floyd_warshall(n, w_m):
     # init dist & predecesor mx
     d = w_m
     p = np.array([np.repeat(i, n) for i in range(n)])
@@ -62,7 +75,7 @@ def _floyd_warshall(n, w_m):
     return d, p
 
 
-def steiner(n, R, w_m):
+def steiner_trees(n, R, w_m):
     d, p = floyd_warshall(
         WEIGHT_MATRIX_1, directed=False, return_predecessors=True
     )
@@ -88,8 +101,24 @@ def steiner(n, R, w_m):
 
    
 if __name__ == "__main__":
-    # print(steiner(7, [1], WEIGHT_MATRIX_1))
-    print(floyd_warshall(WEIGHT_MATRIX_1, directed=False, return_predecessors=True))
-    print(f"somonosotro{_floyd_warshall(7, WEIGHT_MATRIX_1)}")
-    # breakpoint()
-    # print(bellman_ford(-np.log(CURRENCY_MATRIX), indices=1))
+    ejs = [2, 3, 4]
+    parser = argparse.ArgumentParser(
+            description="Rutinas de los ejercicios 2, 3 y 4."
+        )
+
+    parser.add_argument(
+        "--ejercicio",
+        help=f"Elegir entre ejercicios: {ejs}",
+        choices=ejs,
+        required=True,
+    )
+
+    if ejercicio == 2:
+        monet_arbit(-np.log(CURRENCY_MATRIX))
+
+    if ejercicio == 3:
+        print(steiner(7, [1], WEIGHT_MATRIX_1))
+
+    if ejercicio == 4:
+        print(max_flow_with_demands())
+    

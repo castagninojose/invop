@@ -81,6 +81,7 @@ def edges_dict(G):
         rv.update({(i, j): G[i, j] for j in range(len(G)) if j != i})
     return rv
 
+
 def path_from_predecessor_vector(p, i, j):
     # reconstruir camino a de i a j a partir de un vector predecesor
     pass
@@ -109,23 +110,13 @@ def bellman_ford(G, source):
             
     return dist_l, predecessor
 
-def monet_arbit(G):
-    n = len(G) 
-    v0_to_vi = np.zeros((1, n))
-    all_to_v0 = np.zeros((n+1, 1))
-    breakpoint()
-    H = np.concatenate(G, v0_to_vi)
-    H = np.concatenate(H, all_to_v0, axis=1)
-    for i in range(n+1):
-        bf = bellman_ford(H, n+1)
-        if bf[1]:
-            continue
-
 
 
 
 
 
 if __name__ == "__main__":
-    print(bellman_ford(CURRENCY_MATRIX, 1))
+    print(edges_dict(WEIGHT_MATRIX_1))
+    print(edge_dict_from_matrix(WEIGHT_MATRIX_1))
+    # print(bellman_ford(CURRENCY_MATRIX, 1))
     # print(monet_arbit(-np.log(CURRENCY_MATRIX)))

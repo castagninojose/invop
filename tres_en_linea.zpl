@@ -4,7 +4,7 @@ param B:=14; # negras
 
 set I:={1..M}; # filas
 set J:={1..N}; # columnas
-param indicadores[I*J]:= |1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27|
+param id_lineas[I*J]:= |1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27|
     |1|1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0| # primero las nueve lineas verticales o "pilotes"
     |2|0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0|
     |3|0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0|
@@ -55,17 +55,17 @@ param indicadores[I*J]:= |1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
     |48|0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0|
     |49|0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0|;
 
-var negras[J] binary; # indicador de los lugares donde hay negras
-var blancas[J] binary;
-var lineas_b[I] binary;
-var lineas_n[I] binary;
+var negras[J] binary; # 1 si el casillero j tiene una negra
+var blancas[J] binary; # 1 si el casillero j tiene una blanca
+var lineas_b[I] binary; # 1 si la linea i esta toda con blancas
+var lineas_n[I] binary; # 1 si la linea i esta toda con negras
 
 subto cant_negras: sum <j> in J : negras[j]==14; # la cantidad de negras tiene que ser 14
 subto c0: forall <j> in J : blancas[j] == -negras[j] + 1; # si no es negra es blanca
-subto c1: forall <i> in I : sum<j> in J : indicadores[i,j] * negras[j] <= 2 + 100*lineas_b[i];
-subto c2: forall <i> in I : sum<j> in J : indicadores[i,j] * negras[j] >= 3 - 100*(1 - lineas_b[i]);
-subto c3: forall <i> in I : sum<j> in J : indicadores[i,j] * blancas[j] <= 2 - 100*lineas_n[i];
-subto c4: forall <i> in I : sum<j> in J : indicadores[i,j] * blancas[j] >= 3 - 100*(1 - lineas_n[i]);
+subto c1: forall <i> in I : sum<j> in J : id_lineas[i,j] * negras[j] <= (2 + 100*lineas_b[i]);
+subto c2: forall <i> in I : sum<j> in J : id_lineas[i,j] * negras[j] >= 3 - 100*(1 - lineas_b[i]);
+subto c3: forall <i> in I : sum<j> in J : id_lineas[i,j] * blancas[j] <= (2 - 100*lineas_n[i]);
+subto c4: forall <i> in I : sum<j> in J : id_lineas[i,j] * blancas[j] >= 3 - 100*(1 - lineas_n[i]);
 
 
 minimize f: sum <i> in I : (lineas_b[i] + lineas_n[i]);
