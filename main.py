@@ -63,19 +63,22 @@ def steiner_trees(R, w_m):
 
    
 if __name__ == "__main__":
-    ejs = ["ej2", "ej3", "ej4"]
+    
+    ej_disp = ["ej2", "ej3", "ej4"]
+
     parser = argparse.ArgumentParser(
             description="Rutinas de los ejercicios 2, 3 y 4."
         )
 
     parser.add_argument(
         "--ejercicio",
-        help=f"Elegir entre ejercicios: {ejs}",
-        choices=ejs,
+        help=f"Elegir entre ejercicios: {ej_disp}",
+        choices=ej_disp,
         required=True,
     )
 
     args = parser.parse_args()
+    
     target = args.ejercicio
 
     if target == "ej2":
@@ -83,7 +86,7 @@ if __name__ == "__main__":
         bellman_ford(CURRENCY_MATRIX, 1)
 
     if target == "ej3":
-        print(steiner(7, [1], WEIGHT_MATRIX_1))
+        print(steiner_trees(7, [1], WEIGHT_MATRIX_1))
 
     if target == "ej4":
         print(max_flow_with_demands())
