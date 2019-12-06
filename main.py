@@ -3,8 +3,8 @@ import argparse
 from itertools import combinations
 # from scipy.sparse.csgraph import floyd_warshall, bellman_ford
 
-from utils import prim, edges_dict, edge_dict_from_matrix
-from constants import WEIGHT_MATRIX_1, CURRENCY_MATRIX
+from utils import prim, edges_dict, bellman_ford, floyd_warshall
+from constants import WEIGHT_MATRIX_1, CURRENCY_MATRIX, CAPACITY_MATRIX, DEMAND_MATRIX
 
 def monet_arbit(G):
     n = len(G) 
@@ -37,33 +37,7 @@ def max_flow_with_demands(cap_m=CAPACITY_MATRIX, dem_m=DEMAND_MATRIX, source=0, 
     return rvm
 
 
-def floyd_warshall(n, w_m):
-    # init dist & predecesor mx
-    d = w_m
-    p = np.array([np.repeat(i, n) for i in range(n)])
-
-    # floyd warshall. find the shortest path fron i to j
-    for i in range(n):
-        for j in range(n):
-            if i != j:
-                d[i,j] = w_m[i,j]
-            else:
-                d[i,j] = 0
-                p[i,j] = 0
-    
-    for k in range(n):
-        for i in range(n):
-            if d[i, k] == np.inf:
-                continue
-            for j in range(n):
-                if d[i,j] > d[i,k] + d[k,j]:
-                    d[i, j] = d[i,k] + d[k,j]
-                    p[i, j] = p[k, j]
-
-    return d, p
-
-
-def steiner_trees(n, R, w_m):
+def steiner_trees(R, w_m):
     d, p = floyd_warshall(
         WEIGHT_MATRIX_1, directed=False, return_predecessors=True
     )
@@ -89,7 +63,7 @@ def steiner_trees(n, R, w_m):
 
    
 if __name__ == "__main__":
-    ejs = [2, 3, 4]
+    ejs = ["ej2", "ej3", "ej4"]
     parser = argparse.ArgumentParser(
             description="Rutinas de los ejercicios 2, 3 y 4."
         )
@@ -101,12 +75,16 @@ if __name__ == "__main__":
         required=True,
     )
 
-    if ejercicio == 2:
-        monet_arbit(-np.log(CURRENCY_MATRIX))
+    args = parser.parse_args()
+    target = args.ejercicio
 
-    if ejercicio == 3:
+    if target == "ej2":
+        # monet_arbit(-np.log(CURRENCY_MATRIX))
+        bellman_ford(CURRENCY_MATRIX, 1)
+
+    if target == "ej3":
         print(steiner(7, [1], WEIGHT_MATRIX_1))
 
-    if ejercicio == 4:
+    if target == "ej4":
         print(max_flow_with_demands())
     

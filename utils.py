@@ -29,6 +29,22 @@ class Grafo:
 grafo = Grafo(WEIGHT_MATRIX_1)
 grafo.generate_edges()
 
+
+def edges_dict(G):
+    # generar diccionario con los ejes como keys y los valores de G como value
+    rv = {}
+    for i in range(len(G)):
+        rv.update({(i, j): G[i, j] for j in range(len(G)) if j != i})
+    return rv
+
+
+def path_from_predecessor_vector(p, i, j):
+    # reconstruir camino a de i a j a partir de un vector predecesor
+    pass
+
+def path_from_predecessor_matrix(p, i, j):
+    pass
+
 def vecinos(G, v):
     aristas_finitas = G[v,:] < np.inf
     vecinos_lista = np.where(aristas_finitas.tolist())[0]
@@ -63,20 +79,6 @@ def prim(G):
     weights_rv = sum([grafo.adj_m[l[0]][l[1]] for l in rv])
     return rv , weights_rv
 
-def edges_dict(G):
-    # generar diccionario con los ejes como keys y los valores de G como value
-    rv = {}
-    for i in range(len(G)):
-        rv.update({(i, j): G[i, j] for j in range(len(G)) if j != i})
-    return rv
-
-
-def path_from_predecessor_vector(p, i, j):
-    # reconstruir camino a de i a j a partir de un vector predecesor
-    pass
-
-def path_from_predecessor_matrix(p, i, j):
-    pass
 
 def bellman_ford(G, source):
     # init
