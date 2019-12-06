@@ -29,17 +29,6 @@ class Grafo:
 grafo = Grafo(WEIGHT_MATRIX_1)
 grafo.generate_edges()
 
-def edge_dict_from_matrix(w_m):
-    # devuelve un diccionario de aristas a partir de una matriz de pesos
-    n = w_m.shape[1]
-    rv = []
-    for i in range(n):
-        for k in range(n):
-            if w_m[i,k] < np.inf:
-                rv.append((i,k))
-    
-    return {i : rv[i] for i in range(len(rv))}
-
 def vecinos(G, v):
     aristas_finitas = G[v,:] < np.inf
     vecinos_lista = np.where(aristas_finitas.tolist())[0]
@@ -111,6 +100,30 @@ def bellman_ford(G, source):
     return dist_l, predecessor
 
 
+def floyd_warshall(n, w_m):
+    # init dist & predecesor mx
+    dist_m = w_m
+    predecessor_m = np.array([np.repeat(i, n) for i in range(n)])
+
+    # floyd warshall. find the shortest path fron i to j
+    for i in range(n):
+        for j in range(n):
+            if i != j:
+                dist_m[i,j] = w_m[i,j]
+            else:
+                dist_m[i,j] = 0
+                predecessor_m[i,j] = 0
+    
+    for k in range(n):
+        for i in range(n):
+            if dist_m[i, k] == np.inf:
+                continue
+            for j in range(n):
+                if dist_m[i,j] > dist_m[i,k] + dist_m[k,j]:
+                    dist_m[i, j] = dist_m[i,k] + dist_m[k,j]
+                    predecessor_m[i, j] = predecessor_m[k, j]
+
+    return dist_m, predecessor_m
 
 
 

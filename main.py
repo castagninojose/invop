@@ -10,24 +10,12 @@ def monet_arbit(G):
     n = len(G) 
     v0_to_vi = np.zeros((1, n))
     all_to_v0 = np.zeros((n+1, 1))
-    breakpoint()
     H = np.concatenate(G, v0_to_vi)
     H = np.concatenate(H, all_to_v0, axis=1)
     for i in range(n+1):
         bf = bellman_ford(H, n+1)
         if bf[1]:
             continue
-
-def edge_dict_from_matrix(w_m):
-    # devuelve un diccionario de aristas a partir de una matriz de pesos
-    n = w_m.shape[1]
-    rv = []
-    for i in range(n):
-        for k in range(n):
-            if w_m[i,k] < np.inf:
-                rv.append((i,k))
-    
-    return {i : rv[i] for i in range(len(rv))}
 
 def max_flow_with_demands(cap_m=CAPACITY_MATRIX, dem_m=DEMAND_MATRIX, source=0, sink=1):
     n = len(cap_m)
