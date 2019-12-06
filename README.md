@@ -13,4 +13,13 @@ El algoritmo de Steiner. [Graphs, Networks and algorithms](https://doc.lagout.or
 
 ### Ejercicio 4:
     
-Máximo flujo para grafos donde las aristas además de un tope tienen también un piso mímino de flujo. [0](https://pdfs.semanticscholar.org/03a2/785783f43202925da70ae842eeda9cebd77e.pdf)
+Máximo flujo para un grafo `G = (V, E)` donde las aristas además de un tope tienen también un piso mímino de flujo.
+Se reduce a buscar el maximo flujo en un grafo `G' = (V', E')` definiendolo del siguiente modo:
+
+`V' = V + {s', t'}` con s' y t' nuevos source y sink respectivamente.  
+Luego para cada arista `(u, v)` en `G` seteamos las capacidades `c'` asi:
+
+* Una arista `(u, v)` con capacidad igual a la diferencia entre el tope y el piso de `(u, v)` en `G`.
+* 
+
+[ref](https://pdfs.semanticscholar.org/03a2/785783f43202925da70ae842eeda9cebd77e.pdf)

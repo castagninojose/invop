@@ -39,18 +39,24 @@ def steiner_trees(R, w_m):
     H = "Kn"  # grafo completo de n nodos
     S = np.delete(w_m, R, 0)
     S = np.delete(S, R, 1)
-    for i in range(S.shape[1]-1):
+    for i in range(1, len(R)-2):
 
         for c in combinations(S, i):
 
             P = np.delete(S, list(c), 0)
             P = np.delete(P, list(c), 1)
             T_prima, z = prim(P)
-            if W > z:
+            print(f"T_prima:{T_prima}, z:{z}, w:{W}")
+            if z < W:
                 W = z
                 T = T_prima
 
-    aristas_l = edges_dict(T)
+    rv = dict()
+    for e in T:
+        u, v = e[0], e[1]
+        print(u, v)
+        if w_m[u, v] == np.inf or w_m[u, v] > d[u, v]:
+            rv.update({e: path_from_predecessor_vector(p, u, v)})
 
     return T, W
 
@@ -106,7 +112,7 @@ if __name__ == "__main__":
 
     if target == "ej3":
 
-        print(steiner_trees([1], WEIGHT_MATRIX_1))
+        print(steiner_trees([1, 4, 5, 6], WEIGHT_MATRIX_1))
 
     if target == "ej4":
         print(max_flow_with_demands())
