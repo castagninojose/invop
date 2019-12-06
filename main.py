@@ -7,7 +7,7 @@ from constants import WEIGHT_MATRIX_1, CURRENCY_MATRIX, CAPACITY_MATRIX, DEMAND_
 
 def monet_arbit(G):
     """
-    Rutina del ejercicio 2 para encontrar arbitraje monetario.
+    Rutina del ejercicio 2 para encontrar oportunidad de arbitraje cambiario.
     Args:
         G : numpy.array de dos dimensiones (matriz) con los precios de las monedas
     """
@@ -100,6 +100,7 @@ if __name__ == "__main__":
         bellman_ford(CURRENCY_MATRIX, 1)
 
     if target == "ej3":
+
         print(steiner_trees([1], WEIGHT_MATRIX_1))
 
     if target == "ej4":

@@ -39,10 +39,11 @@ def edges_dict(G):
 
 
 def path_from_predecessor_vector(p, i, j):
-    # reconstruir camino a de i a j a partir de un vector predecesor
+    # reconstruir camino a de i a j a partir de un vector `p` predecesor
     pass
 
 def path_from_predecessor_matrix(p, i, j):
+    # usar la anterior llamada con una columna de la matriz p
     pass
 
 def vecinos(G, v):
