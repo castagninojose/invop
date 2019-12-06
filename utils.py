@@ -145,6 +145,21 @@ def floyd_warshall(w_m):
     return dist_m, predecessor_m
 
 
+def breadth_first_search(G, source, sink, padre):
+    n = G.shape[0]
+    visitados = [False] * n
+    cola = [source]
+    visitados[source] = True
+    while cola:
+        u = cola.pop(0)
+        nei = vecinos(u)
+        for k in nei:
+            if visitados[k] == False and G[u, k] > 0:
+                cola.append(k)
+                visitados[k] == True
+                padre[k] = u
+
+    return True if visited[sink] else False
 
 
 if __name__ == "__main__":
