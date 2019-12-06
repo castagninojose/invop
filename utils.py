@@ -2,7 +2,7 @@ import numpy as np
 
 from collections import defaultdict
 
-from constants import WEIGHT_MATRIX_1, CURRENCY_MATRIX, PAISES_DICT, EJ_4_21_CURRENCY_M
+from constants import WEIGHT_MATRIX_1, CURRENCY_MATRIX, PAISES_DICT, EJ_4_21_CURRENCY_M, aver
 
 
 class Grafo:
@@ -152,7 +152,7 @@ def breadth_first_search(G, source, sink, padre):
     visitados[source] = True
     while cola:
         u = cola.pop(0)
-        nei = vecinos(u)
+        nei = vecinos(G, u)
         for k in nei:
             if visitados[k] == False and G[u, k] > 0:
                 cola.append(k)
@@ -162,7 +162,26 @@ def breadth_first_search(G, source, sink, padre):
     return True if visited[sink] else False
 
 
+def ford_fulkerson(G, source, sink):
+    padre = [-1] * G.shape[0]
+    rv = 0
+
+    while breadth_first_search(G, source, sink, padre):
+        flujo_c = np.inf
+        s = sink
+        while (s != source):
+            flujo_c = min(flujo_c, G[padre[s],s])
+        
+        rv = rv * flujo_c
+
+        v = sink
+        while v != source:
+            u = padre[v]
+            G[u,v] = G[u,v] - flujo_c
+            G[v,u] = G[v,u] + flujo_c
+            v = padre[v]
+
+    return rv
+
 if __name__ == "__main__":
-    print(edges_dict(EJ_4_21_CURRENCY_M))
-    oportunidad, d, pre =  bellman_ford(-np.log(EJ_4_21_CURRENCY_M), 0)
-    breakpoint()
+    ford_fulkerson(aver, 0, 5)
