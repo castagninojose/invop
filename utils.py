@@ -2,7 +2,7 @@ import numpy as np
 
 from collections import defaultdict
 
-from constants import WEIGHT_MATRIX_1, CURRENCY_MATRIX, PAISES_DICT
+from constants import WEIGHT_MATRIX_1, CURRENCY_MATRIX, PAISES_DICT, EJ_4_21_CURRENCY_M
 
 
 class Grafo:
@@ -92,6 +92,7 @@ def bellman_ford(G, source):
     dist_l = [float('Inf')] * n
     predecessor = [-1] * n
     dist_l[source] = 0
+    ciclo_negativo_flag = False
     # relax
     for i in range(n-1):
         for e in aristas_d.keys():
@@ -103,6 +104,10 @@ def bellman_ford(G, source):
     for e in aristas_d:
         if (dist_l[e[1]] != float('Inf') and dist_l[e[1]] > dist_l[e[0]]):
             print(f"Existe ciclo negativo p: {predecessor}")
+            ciclo_negativo_flag = True
+            return True, dist_l, predecessor
+        else:
+            continue
             
     return dist_l, predecessor
 
@@ -137,6 +142,6 @@ def floyd_warshall(w_m):
 
 
 if __name__ == "__main__":
-    print(edges_dict(WEIGHT_MATRIX_1))
-    d, pre =  bellman_ford(-np.log(CURRENCY_MATRIX), 0)
+    print(edges_dict(EJ_4_21_CURRENCY_M))
+    oportunidad, d, pre =  bellman_ford(-np.log(EJ_4_21_CURRENCY_M), 0)
     breakpoint()

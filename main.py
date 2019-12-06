@@ -11,17 +11,19 @@ def monet_arbit(G):
     Args:
         G : numpy.array de dos dimensiones (matriz) con los precios de las monedas
     """
+    # init: agrego un vertice y le asigno cero a las distancias de éste a todos los demás vertices
     n = len(G) 
     v0_to_vi = np.zeros((1, n))
     all_to_v0 = np.zeros((n+1, 1))
     H = np.concatenate(G, v0_to_vi)
     H = np.concatenate(H, all_to_v0, axis=1)
     for i in range(n+1):
+        # para cada moneda quiero: si existe un camino negativo, devolverlo
         bf = bellman_ford(H, i)
-        if bf[0]: # ciclo negativo
+        if bf[0] == True: # ciclo negativo
             continue
         else:
-
+            rv.append()
 
 
 def steiner_trees(R, w_m):
