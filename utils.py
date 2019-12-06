@@ -102,8 +102,9 @@ def bellman_ford(G, source):
     return dist_l, predecessor
 
 
-def floyd_warshall(n, w_m):
+def floyd_warshall(w_m):
     # init dist & predecesor mx
+    n = w_m.shape[0]  # mx has to be squared
     dist_m = w_m
     predecessor_m = np.array([np.repeat(i, n) for i in range(n)])
 

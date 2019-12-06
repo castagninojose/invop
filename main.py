@@ -17,7 +17,7 @@ def monet_arbit(G):
         if bf[1]:
             continue
 
-def max_flow_with_demands(cap_m=CAPACITY_MATRIX, dem_m=DEMAND_MATRIX, source=0, sink=1):
+def max_flow_with_demands(cap_m=CAPACITY_MATRIX, dem_m=DEMAND_MATRIX):
     n = len(cap_m)
     rvm = cap_m - dem_m
     rvm[n-1,0] = np.inf
@@ -38,9 +38,7 @@ def max_flow_with_demands(cap_m=CAPACITY_MATRIX, dem_m=DEMAND_MATRIX, source=0, 
 
 
 def steiner_trees(R, w_m):
-    d, p = floyd_warshall(
-        WEIGHT_MATRIX_1, directed=False, return_predecessors=True
-    )
+    d, p = floyd_warshall(w_m)
     W = np.inf
     T = []
     H = "Kn"  # grafo completo de n nodos
@@ -57,7 +55,7 @@ def steiner_trees(R, w_m):
                 W = z
                 T = T_prima
 
-    aristas_l = edges_dict()    
+    aristas_l = edges_dict(T)  
 
     return T, W
 
@@ -78,7 +76,7 @@ if __name__ == "__main__":
     )
 
     args = parser.parse_args()
-    
+
     target = args.ejercicio
 
     if target == "ej2":
@@ -86,7 +84,7 @@ if __name__ == "__main__":
         bellman_ford(CURRENCY_MATRIX, 1)
 
     if target == "ej3":
-        print(steiner_trees(7, [1], WEIGHT_MATRIX_1))
+        print(steiner_trees([1], WEIGHT_MATRIX_1))
 
     if target == "ej4":
         print(max_flow_with_demands())
