@@ -1,8 +1,12 @@
 import numpy as np
 
+
+from scipy.sparse.csgraph import dijkstra
+
 from constants import CAPACITY_MATRIX, DEMAND_MATRIX, WEIGHT_MATRIX_1
 
 def edge_dict_from_matrix(w_m):
+    # devuelve un diccionario de aristas a partir de una matriz de pesos
     n = w_m.shape[1]
     rv = []
     for i in range(n):
@@ -12,7 +16,7 @@ def edge_dict_from_matrix(w_m):
     
     return {i : rv[i] for i in range(len(rv))}
 
-def generate_new_cap_m(cap_m=CAPACITY_MATRIX, dem_m=DEMAND_MATRIX, source=0, sink=1):
+def new_caps_mx(cap_m=CAPACITY_MATRIX, dem_m=DEMAND_MATRIX, source=0, sink=1):
     n = len(cap_m)
     rvm = cap_m - dem_m
     rvm[n-1,0] = np.inf
@@ -32,8 +36,3 @@ def generate_new_cap_m(cap_m=CAPACITY_MATRIX, dem_m=DEMAND_MATRIX, source=0, sin
     return rvm
 
 if __name__ == "__main__":
-    print(edge_dict_from_matrix(CAPACITY_MATRIX))
-    print(edge_dict_from_matrix(DEMAND_MATRIX))
-    print(edge_dict_from_matrix(WEIGHT_MATRIX_1))
-    rvm = generate_new_cap_m()
-    print(rvm)
