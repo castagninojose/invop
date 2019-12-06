@@ -134,5 +134,3 @@ def floyd_warshall(w_m):
 if __name__ == "__main__":
     print(edges_dict(WEIGHT_MATRIX_1))
     print(edge_dict_from_matrix(WEIGHT_MATRIX_1))
-    # print(bellman_ford(CURRENCY_MATRIX, 1))
-    # print(monet_arbit(-np.log(CURRENCY_MATRIX)))

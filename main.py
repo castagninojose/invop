@@ -1,12 +1,16 @@
 import numpy as np
 import argparse
 from itertools import combinations
-# from scipy.sparse.csgraph import floyd_warshall, bellman_ford
 
 from utils import prim, edges_dict, bellman_ford, floyd_warshall
 from constants import WEIGHT_MATRIX_1, CURRENCY_MATRIX, CAPACITY_MATRIX, DEMAND_MATRIX
 
 def monet_arbit(G):
+    """
+    Rutina del ejercicio 2 para encontrar arbitraje monetario.
+    Args:
+        G : numpy.array de dos dimensiones (matriz) con los precios de las monedas
+    """
     n = len(G) 
     v0_to_vi = np.zeros((1, n))
     all_to_v0 = np.zeros((n+1, 1))
@@ -18,6 +22,12 @@ def monet_arbit(G):
             continue
 
 def max_flow_with_demands(cap_m=CAPACITY_MATRIX, dem_m=DEMAND_MATRIX):
+    """
+    Rutina para el ejercicio 4 de maximo flujo con demandas minimas.
+    Args:
+        cap_m : numpy.array de dos dimensiones con los topes de las aristas
+        dem_m : numpy.array de dos dimensiones con los minimos de las aristas
+    """
     n = len(cap_m)
     rvm = cap_m - dem_m
     rvm[n-1,0] = np.inf
@@ -38,6 +48,12 @@ def max_flow_with_demands(cap_m=CAPACITY_MATRIX, dem_m=DEMAND_MATRIX):
 
 
 def steiner_trees(R, w_m):
+    """
+    Genera arboles de steiner. Para el ej 3.
+    Args:
+        R : list contiene a los vertices protegidos
+        w_m : numpy.array de dos dimensiones con los pesos originales de las aristas
+    """
     d, p = floyd_warshall(w_m)
     W = np.inf
     T = []
@@ -55,7 +71,7 @@ def steiner_trees(R, w_m):
                 W = z
                 T = T_prima
 
-    aristas_l = edges_dict(T)  
+    aristas_l = edges_dict(T)
 
     return T, W
 
