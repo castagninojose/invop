@@ -6,7 +6,7 @@ set I:={1..M}; # filas
 set J:={1..N}; # columnas
 
 # armo una matriz "indicadora": cada fila representa una `linea` y cada columna uno de los 27 cubitos.
-param id_lineas[I*J]:=  |1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27|
+param matriz_id_lineas[I*J]:=  |1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27|
                         |1|1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0| # primero las nueve lineas verticales o "pilotes"
                         |2|0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0|
                         |3|0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0|
@@ -54,20 +54,20 @@ param id_lineas[I*J]:=  |1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 
                         |45|0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0|
                         |46|0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0|
                         |47|0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0|
-                        |48|0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0|
+                        |48|0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0|
                         |49|0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0|;
 
 var negras[J] binary; # 1 si el casillero j tiene una negra
-var blancas[J] binary; # 1 si el casillero j tiene una blanca
 var lineas_b[I] binary; # 1 si la linea i esta toda con blancas
 var lineas_n[I] binary; # 1 si la linea i esta toda con negras
 
 subto cant_negras: sum <j> in J : negras[j]==14; # la cantidad de negras tiene que ser 14
-subto c0: forall <j> in J : blancas[j] == -negras[j] + 1; # si no es negra es blanca
-subto c1: forall <i> in I : sum<j> in J : id_lineas[i,j] * negras[j] <= (2.9 + 100*lineas_n[i]);
-subto c2: forall <i> in I : sum<j> in J : id_lineas[i,j] * negras[j] >= 3 - 100*(1 - lineas_n[i]);
-subto c3: forall <i> in I : sum<j> in J : id_lineas[i,j] * blancas[j] <= (2.9 - 100*lineas_b[i]);
-subto c4: forall <i> in I : sum<j> in J : id_lineas[i,j] * blancas[j] >= 3 - 100*(1 - lineas_b[i]);
+
+# ahora fuerzo a `lineas_b` y `lineas_n` a ser 1 si hay una linea formada y 0 si no. 
+subto c1: forall <i> in I : sum<j> in J : matriz_id_lineas[i,j] * negras[j] <= (2.9 + 100*lineas_n[i]);
+subto c2: forall <i> in I : sum<j> in J : matriz_id_lineas[i,j] * negras[j] >= 3 - 100*(1 - lineas_n[i]);
+subto c3: forall <i> in I : sum<j> in J : matriz_id_lineas[i,j] * (1 - negras[j]) <= (2.9 - 100*lineas_b[i]);
+subto c4: forall <i> in I : sum<j> in J : matriz_id_lineas[i,j] * (1 - negras[j]) >= 3 - 100*(1 - lineas_b[i]);
 
 
 minimize f: sum <i> in I : (lineas_b[i] + lineas_n[i]);

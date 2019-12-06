@@ -40,7 +40,11 @@ def edges_dict(G):
 
 def path_from_predecessor_vector(p, i, j):
     # reconstruir camino a de i a j a partir de un vector `p` predecesor
-    pass
+    rv = []
+    if p[i] == j:
+        return [i, j]
+    else:
+        path_from_predecessor_vector(p, p[i], j)
 
 def path_from_predecessor_matrix(p, i, j):
     # usar la anterior llamada con una columna de la matriz p
@@ -78,7 +82,7 @@ def prim(G):
                     parents[jx] = ix
     
     weights_rv = sum([grafo.adj_m[l[0]][l[1]] for l in rv])
-    return rv , weights_rv
+    return rv, weights_rv
 
 
 def bellman_ford(G, source):
@@ -134,4 +138,5 @@ def floyd_warshall(w_m):
 
 if __name__ == "__main__":
     print(edges_dict(WEIGHT_MATRIX_1))
-    print(edge_dict_from_matrix(WEIGHT_MATRIX_1))
+    d, pre =  bellman_ford(-np.log(CURRENCY_MATRIX), 0)
+    breakpoint()

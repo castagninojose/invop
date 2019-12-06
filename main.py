@@ -17,34 +17,11 @@ def monet_arbit(G):
     H = np.concatenate(G, v0_to_vi)
     H = np.concatenate(H, all_to_v0, axis=1)
     for i in range(n+1):
-        bf = bellman_ford(H, n+1)
-        if bf[1]:
+        bf = bellman_ford(H, i)
+        if bf[0]: # ciclo negativo
             continue
+        else:
 
-def max_flow_with_demands(cap_m=CAPACITY_MATRIX, dem_m=DEMAND_MATRIX):
-    """
-    Rutina para el ejercicio 4 de maximo flujo con demandas minimas.
-    Args:
-        cap_m : numpy.array de dos dimensiones con los topes de las aristas
-        dem_m : numpy.array de dos dimensiones con los minimos de las aristas
-    """
-    n = len(cap_m)
-    rvm = cap_m - dem_m
-    rvm[n-1,0] = np.inf
-    s = []
-    t = [np.nan]
-    for i in range(n):
-        t.append(dem_m[i][~np.isnan(dem_m[i])].sum())
-        s.append(dem_m[:,i][~np.isnan(dem_m[:,i])].sum())
-    
-    rvm = np.r_[[s], rvm]
-    rvm = np.c_[rvm, np.array(t)]
-    vacios_1 = np.empty((1,n+1))*np.nan
-    vacios_2 = np.empty((n+2, 1))*np.nan
-    rvm = np.r_[rvm, vacios_1]
-    rvm = np.c_[vacios_2, rvm]
-
-    return rvm
 
 
 def steiner_trees(R, w_m):
@@ -74,6 +51,32 @@ def steiner_trees(R, w_m):
     aristas_l = edges_dict(T)
 
     return T, W
+
+
+def max_flow_with_demands(cap_m=CAPACITY_MATRIX, dem_m=DEMAND_MATRIX):
+    """
+    Rutina para el ejercicio 4 de maximo flujo con demandas minimas.
+    Args:
+        cap_m : numpy.array de dos dimensiones con los topes de las aristas
+        dem_m : numpy.array de dos dimensiones con los minimos de las aristas
+    """
+    n = len(cap_m)
+    rvm = cap_m - dem_m
+    rvm[n-1,0] = np.inf
+    s = []
+    t = [np.nan]
+    for i in range(n):
+        t.append(dem_m[i][~np.isnan(dem_m[i])].sum())
+        s.append(dem_m[:,i][~np.isnan(dem_m[:,i])].sum())
+    
+    rvm = np.r_[[s], rvm]
+    rvm = np.c_[rvm, np.array(t)]
+    vacios_1 = np.empty((1,n+1))*np.nan
+    vacios_2 = np.empty((n+2, 1))*np.nan
+    rvm = np.r_[rvm, vacios_1]
+    rvm = np.c_[vacios_2, rvm]
+
+    return rvm
 
    
 if __name__ == "__main__":
