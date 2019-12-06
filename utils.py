@@ -40,15 +40,21 @@ def edges_dict(G):
 
 def path_from_predecessor_vector(p, i, j):
     # reconstruir camino a de i a j a partir de un vector `p` predecesor
-    rv = []
-    if p[i] == j:
-        return [i, j]
-    else:
-        path_from_predecessor_vector(p, p[i], j)
+    # rv = [i]
+    # destino_col = p
+    # while destino_col[i] != j:
+    #     rv.append(i)
+    #     i = destino_col[i]
+    pass
 
 def path_from_predecessor_matrix(p, i, j):
-    # usar la anterior llamada con una columna de la matriz p
-    pass
+    rv = []
+    destino_col = p[j, :]
+    while i != j:
+        rv.append([i, destino_col[i]])
+        i = destino_col[i]
+
+    return rv
 
 def vecinos(G, v):
     aristas_finitas = G[v,:] < np.inf

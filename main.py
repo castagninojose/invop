@@ -52,13 +52,14 @@ def steiner_trees(R, w_m):
                 T = T_prima
 
     rv = dict()
+
     for e in T:
         u, v = e[0], e[1]
-        print(u, v)
         if w_m[u, v] == np.inf or w_m[u, v] > d[u, v]:
-            rv.update({e: path_from_predecessor_vector(p, u, v)})
+            for nodo in path_from_predecessor_matrix(p, u, v):
+                rv.update({(u,v): [nodo[0], nodo[1]]})
 
-    return T, W
+    return T, W, rv
 
 
 def max_flow_with_demands(cap_m=CAPACITY_MATRIX, dem_m=DEMAND_MATRIX):
@@ -112,7 +113,7 @@ if __name__ == "__main__":
 
     if target == "ej3":
 
-        print(steiner_trees([1, 4, 5, 6], WEIGHT_MATRIX_1))
+        print(steiner_trees([1, 2, 4, 6], WEIGHT_MATRIX_1))
 
     if target == "ej4":
         print(max_flow_with_demands())
