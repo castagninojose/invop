@@ -32,6 +32,8 @@ def steiner_trees(R, w_m):
     Args:
         R : list contiene a los vertices protegidos
         w_m : numpy.array de dos dimensiones con los pesos originales de las aristas
+    Returns:
+        Un dict con arista : peso como keys y values
     """
     d, p = floyd_warshall(w_m)
     W = np.inf
