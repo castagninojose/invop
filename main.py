@@ -1,15 +1,32 @@
+"""Trabajo libre 12/08/19. Rutina principal."""
 import numpy as np
 import argparse
 from itertools import combinations
 
-from utils import prim, edges_dict, bellman_ford, floyd_warshall
-from constants import WEIGHT_MATRIX_1, CURRENCY_MATRIX, CAPACITY_MATRIX, DEMAND_MATRIX
+from utils import (
+    prim,
+    bellman_ford,
+    floyd_warshall,
+    ford_fulkerson,
+    matrix_from_edges_d,
+    edges_dict_from_m
+    )
+
+from constants import (
+    WEIGHT_MATRIX_1,
+    CURRENCY_MATRIX,
+    CAPACITY_MATRIX,
+    DEMAND_MATRIX,
+    CAPACITY_MATRIX_1,
+    DEMAND_MATRIX_1
+    )
 
 def monet_arbit(G):
     """
     Rutina del ejercicio 2 para encontrar oportunidad de arbitraje cambiario.
     Args:
-        G : numpy.array de dos dimensiones (matriz) con los precios de las monedas
+        G : numpy.array de dos dimensiones (matriz) con los precios de las monedas. `G[i,j]` es la
+            cantidad de moneda `j` que se puede comprar con una unidad de moneda `i`
     """
     # init: agrego un vertice y le asigno cero a las distancias de éste a todos los demás vertices
     n = len(G) 
@@ -58,8 +75,8 @@ def steiner_trees(R, w_m):
     for e in T:
         u, v = e[0], e[1]
         if w_m[u, v] == np.inf or w_m[u, v] > d[u, v]:
-            for nodo in path_from_predecessor_matrix(p, u, v):
-                rv.update({(u,v): [nodo[0], nodo[1]]})
+            for arista in path_from_predecessor_matrix(p, u, v):
+                rv.update({(u,v): [arista[0], arista[1]]})
 
     return T, W, rv
 
@@ -70,53 +87,76 @@ def max_flow_with_demands(cap_m=CAPACITY_MATRIX, dem_m=DEMAND_MATRIX):
     Args:
         cap_m : numpy.array de dos dimensiones con los topes de las aristas
         dem_m : numpy.array de dos dimensiones con los minimos de las aristas
+    See `constants.py` for default values.
     """
     n = len(cap_m)
-    rvm = cap_m - dem_m
-    rvm[n-1,0] = np.inf
+    rv_m = cap_m - dem_m
+    rv_m[n-1,0] = 9991
     s = []
     t = [np.nan]
-    for i in range(n):
+    for i in range(n):  # para cada vertice v
         t.append(dem_m[i][~np.isnan(dem_m[i])].sum())
         s.append(dem_m[:,i][~np.isnan(dem_m[:,i])].sum())
     
-    rvm = np.r_[[s], rvm]
-    rvm = np.c_[rvm, np.array(t)]
-    vacios_1 = np.empty((1,n+1))*np.nan
+    rv_m = np.r_[[s], rv_m]
+    rv_m = np.c_[rv_m, np.array(t)]
+    vacios_1 = np.empty((1, n+1))*np.nan
     vacios_2 = np.empty((n+2, 1))*np.nan
-    rvm = np.r_[rvm, vacios_1]
-    rvm = np.c_[vacios_2, rvm]
+    rv_m = np.r_[rv_m, vacios_1]
+    rv_m = np.c_[vacios_2, rv_m]
 
-    return rvm
+    f1, flujo_factible_d, vvv = ford_fulkerson(rv_m, 0, n+1)
+
+    matriz_aux = matrix_from_edges_d(flujo_factible_d)
+    matriz_aux = np.delete(matriz_aux, [0, n+1], 0)
+    matriz_aux = np.delete(matriz_aux, [0, n+1], 1)
+    matriz_aux[n-1, 0] = 0
+    
+    sarasa = matriz_aux.copy()
+    # breakpoint()
+    for u in range(n):
+        for v in range(n):
+            if (cap_m[u, v] > 0):
+                matriz_aux[u, v] = cap_m[u, v] - matriz_aux[u, v]
+            if (dem_m[u, v] > 0):
+                matriz_aux[u, v] = matriz_aux[v, u] - dem_m[v, u]
+            # else:
+            #     matriz_aux[u, v] = 0
+    # breakpoint()
+    f2, aver, puff = ford_fulkerson(matriz_aux, 0, n-1)
+    # f3, aver1, puffa = ford_fulkerson(sarasa, 0, n-1)
+    # breakpoint()
+    for arista in aver.keys():
+        u, v = arista[0], arista[1]
+        foo = aver[arista]
+        aver.update({arista : cap_m[u, v] - puff[u, v]})
+    breakpoint()
+    return f1+f2, aver
 
    
 if __name__ == "__main__":
     
-    ej_disp = ["ej2", "ej3", "ej4"]
-
     parser = argparse.ArgumentParser(
             description="Rutinas de los ejercicios 2, 3 y 4."
         )
 
-    parser.add_argument(
-        "--ejercicio",
-        help=f"Elegir entre ejercicios: {ej_disp}",
-        choices=ej_disp,
-        required=True,
-    )
+    parser.add_argument("-2", "--ejercicio-2", action="store_true", default=False)
+
+    parser.add_argument("-3", "--ejercicio-3", action="store_true", default=False)
+
+    parser.add_argument("-4", "--ejercicio-4", action="store_true", default=False)
 
     args = parser.parse_args()
 
-    target = args.ejercicio
-
-    if target == "ej2":
+    if args.ejercicio_2:
         # monet_arbit(-np.log(CURRENCY_MATRIX))
         bellman_ford(CURRENCY_MATRIX, 1)
 
-    if target == "ej3":
-
+    elif args.ejercicio_3:
         print(steiner_trees([1, 2, 4, 6], WEIGHT_MATRIX_1))
 
-    if target == "ej4":
-        print(max_flow_with_demands())
+    elif args.ejercicio_4:
+        print(max_flow_with_demands(cap_m=CAPACITY_MATRIX_1, dem_m=DEMAND_MATRIX_1))
     
+    else:
+        print(f"Elegir el ejercicio a resolver. Puede ver las opciones en main.py -h")

@@ -38,6 +38,24 @@ DEMAND_MATRIX = np.array(  # lower bounds for flow problems
     [np.nan, np.nan, np.nan, np.nan, np.nan, np.nan]]
 )
 
+CAPACITY_MATRIX_1 = np.array(  # upper bounds for flow problems
+    [[0, 20, 10, 0, 0,0],
+    [0, 0, 10, 0, 5, 0],
+    [0, 0, 0, 10, 0, 0],
+    [0, 0, 0, 0, 10, 20],
+    [0, 0, 15, 0, 0, 15],
+    [0, 0, 0, 0, 0, 0]]
+)
+
+DEMAND_MATRIX_1 = np.array(  # upper bounds for flow problems
+    [[0, 7, 4, 0, 0,0],
+    [0, 0, 5, 0, 0, 0],
+    [0, 0, 0, 3, 0, 0],
+    [0, 0, 0, 0, 4, 6],
+    [0, 0, 1, 0, 0, 2],
+    [0, 0, 0, 0, 0, 0]]
+)
+
 CURRENCY_MATRIX = np.array(  # M[i,j] = qty of currency j bought with currency i
     [[1, 0.0167, 14.073, 0.0703, 0.625, 106.016, 0.112, 0.0556, 58.539, 0.0222, 0.326],
     [59.837, 1, 842.312, 4.208, 37.431, 6345.05, 7.732, 3.329, 3503.57, 1.329, 19.509],
@@ -74,3 +92,12 @@ EJ_4_21_CURRENCY_M = np.array(
     [0.082, 0.014, 1, 0.0058],
     [15.4, 0.24, 172.34, 1]]
 )
+
+FF_TESTING_M = np.array(  # para testear FF
+    [[np.inf, 16, 13, np.inf, np.inf, np.inf], 
+    [np.inf, np.inf, 10, 12, np.inf, np.inf], 
+    [np.inf, 4, np.inf, np.inf, 14, np.inf], 
+    [np.inf, np.inf, 9, np.inf, np.inf, 20], 
+    [np.inf, np.inf, np.inf, 7, np.inf, 4], 
+    [np.inf, np.inf, np.inf, np.inf, np.inf, np.inf]]
+    ) 
