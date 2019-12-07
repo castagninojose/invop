@@ -154,11 +154,11 @@ def breadth_first_search(G, source, sink, padre):
         u = cola.pop(0)
         nei = vecinos(G, u)
         for k in nei:
-            if visitados[k] == False and G[u, k] > 0 and G[u, k] !=np.inf:
+            if visitados[k] == False and G[u, k] > 0 and G[u, k] != np.inf:
                 cola.append(k)
                 visitados[k] = True
                 padre[k] = u
-
+    breakpoint()
     return True if visitados[sink] else False
 
 

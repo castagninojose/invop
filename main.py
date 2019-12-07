@@ -87,36 +87,34 @@ def max_flow_with_demands(cap_m=CAPACITY_MATRIX, dem_m=DEMAND_MATRIX):
     rv_m = np.r_[rv_m, vacios_1]
     rv_m = np.c_[vacios_2, rv_m]
 
+    breakpoint()
+
     return ford_fulkerson(rv_m, n+1, n+2)
 
    
 if __name__ == "__main__":
     
-    ej_disp = ["ej2", "ej3", "ej4"]
-
     parser = argparse.ArgumentParser(
             description="Rutinas de los ejercicios 2, 3 y 4."
         )
 
-    parser.add_argument(
-        "--ejercicio",
-        help=f"Elegir entre ejercicios: {ej_disp}",
-        choices=ej_disp,
-        required=True,
-    )
+    parser.add_argument("-2", "--ejercicio-2", action="store_true", default=False)
+    parser.add_argument("-3", "--ejercicio-3", action="store_true", default=False)
+    parser.add_argument("-4", "--ejercicio-4", action="store_true", default=False)
+
 
     args = parser.parse_args()
 
-    target = args.ejercicio
-
-    if target == "ej2":
+    if args.ejercicio_2:
         # monet_arbit(-np.log(CURRENCY_MATRIX))
         bellman_ford(CURRENCY_MATRIX, 1)
 
-    if target == "ej3":
+    elif args.ejercicio_3:
 
         print(steiner_trees([1, 2, 4, 6], WEIGHT_MATRIX_1))
 
-    if target == "ej4":
+    elif args.ejercicio_4:
         print(max_flow_with_demands())
     
+    else:
+        print(f"Elegir el ejercicio a resolver. Puede ver las opciones en main.py --help")
