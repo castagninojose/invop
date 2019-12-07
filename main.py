@@ -58,8 +58,8 @@ def steiner_trees(R, w_m):
     for e in T:
         u, v = e[0], e[1]
         if w_m[u, v] == np.inf or w_m[u, v] > d[u, v]:
-            for nodo in path_from_predecessor_matrix(p, u, v):
-                rv.update({(u,v): [nodo[0], nodo[1]]})
+            for arista in path_from_predecessor_matrix(p, u, v):
+                rv.update({(u,v): [arista[0], arista[1]]})
 
     return T, W, rv
 
