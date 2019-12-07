@@ -87,7 +87,7 @@ def prim(G):
                     key[jx] = G[ix, jx]
                     parents[jx] = ix
     
-    weights_rv = sum([grafo.adj_m[l[0]][l[1]] for l in rv])
+    weights_rv = sum([G[l[0]][l[1]] for l in rv])
     return rv, weights_rv
 
 
@@ -162,24 +162,31 @@ def camino_superador(G, source, sink, padre):
                 visitados[v] = True
                 padre[v] = u
 
-    return True if visitados[sink] else False
+    if visitados[sink]:
+        return True, padre
+    else:
+        return False, padre
 
 
 def ford_fulkerson(G, source, sink):
     
     # init
     flujos_cap_d = edges_dict(G)
+    flujos_residual = flujos_cap_d.copy()
     for arista in flujos_cap_d.keys():
-        print(f"flujo de {arista} en G': {flujos_cap_d[arista]}")
+        u, v = arista[0], arista[1]
         if isinstance(flujos_cap_d[arista], int):
-            flujos_cap_d.update({arista : 0})  # donde no hay ni `inf` ni `nan` pongo flujo 0
+            flujos_cap_d.update({arista : 0})  # donde no hay `inf` ni `nan` pongo flujo 0
 
     # mientras haya un camino `p` de `source` a `sink` en el residual con flujo > 0 en todas sus aristas:
         # encontrar flujo(p) = min(flujo(u,v)
 
-    while camino_superador()
+    padre = [-1] * G.shape[0]
+    breakpoint()
+    while camino_superador(G, source, sink, padre)[0]:
+        pass
 
     return rv
 
 if __name__ == "__main__":
-    print(ford_fulkerson(aver, 0, 5))
+    print(prim(WEIGHT_MATRIX_1))

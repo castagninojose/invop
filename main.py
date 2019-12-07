@@ -88,8 +88,6 @@ def max_flow_with_demands(cap_m=CAPACITY_MATRIX, dem_m=DEMAND_MATRIX):
     rv_m = np.r_[rv_m, vacios_1]
     rv_m = np.c_[vacios_2, rv_m]
 
-    breakpoint()
-
     return ford_fulkerson(rv_m, n+1, n+2)
 
    
