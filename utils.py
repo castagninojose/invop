@@ -1,3 +1,7 @@
+"""
+Modulo de funciones auxiliares. La primera parte son funciones más agnósticas o no-especificas.
+Hacia el final aparecen algunas implementaciones de subrutinas utiles para los algoritmos principales.
+"""
 import numpy as np
 
 from collections import defaultdict
@@ -37,6 +41,8 @@ def edges_dict_from_m(G):
         G = numpy.array
     Returns:
         dict con las aristas y pesos representados por G como keys y values respectivamente.
+    Note: 
+        Ignora las diagonales ya que asume que no hay self-loops (i.e.) aristas `(u,u)`.
     """
     n = G.shape[0]
     rv = {}
@@ -46,13 +52,14 @@ def edges_dict_from_m(G):
         )
     return rv
 
+
 def matrix_from_edges_d(d):
     """
     Genera una matriz a partir de un diccionario de aristas.
     Args:
-        `d` = dict con aristas como keys y sus "pesos". {(u,v) : peso(u, v)}
+        `d` = dict con aristas como keys y sus "pesos". {(u,v) : peso(u, v)}.
     Returns:
-        numpy.array de dos dimensiones (matriz de nxn)
+        numpy.array de dos dimensiones (matriz de nxn).
     """
     n = max(
         [v[0] for v in d.keys()]
@@ -66,6 +73,7 @@ def matrix_from_edges_d(d):
     
     return rv
 
+
 def path_from_predecessor_matrix(p, i, j):
     """
     Buscar camino del vertice `i` al `j` usando la matriz de predecesores `p`.
@@ -78,6 +86,7 @@ def path_from_predecessor_matrix(p, i, j):
 
     return rv
 
+
 def vecinos(G, v):
     """
     Genera una lista con los vecinos del vertice `v` en `G`.
@@ -85,6 +94,7 @@ def vecinos(G, v):
     aristas_finitas = G[v,:] < np.inf
     vecinos_lista = np.where(aristas_finitas.tolist())[0]
     return vecinos_lista
+
 
 def ix_min(key, vis_l):
     """
@@ -96,6 +106,7 @@ def ix_min(key, vis_l):
     k_array = np.array(key)
     k_array[vis_l] = np.inf
     return np.argmin(k_array)
+
 
 def prim(G):
     n = len(G)

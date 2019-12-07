@@ -1,3 +1,4 @@
+"""Trabajo libre 12/08/19. Rutina principal."""
 import numpy as np
 import argparse
 from itertools import combinations
