@@ -76,10 +76,10 @@ EJ_4_21_CURRENCY_M = np.array(
 )
 
 aver = np.array(
-    [[0, 16, 13, 0, 0, 0], 
-    [0, 0, 10, 12, 0, 0], 
-    [0, 4, 0, 0, 14, 0], 
-    [0, 0, 9, 0, 0, 20], 
-    [0, 0, 0, 7, 0, 4], 
-    [0, 0, 0, 0, 0, 0]]
+    [[np.inf, 16, 13, np.inf, np.inf, np.inf], 
+    [np.inf, np.inf, 10, 12, np.inf, np.inf], 
+    [np.inf, 4, np.inf, np.inf, 14, np.inf], 
+    [np.inf, np.inf, 9, np.inf, np.inf, 20], 
+    [np.inf, np.inf, np.inf, 7, np.inf, 4], 
+    [np.inf, np.inf, np.inf, np.inf, np.inf, np.inf]]
     ) 

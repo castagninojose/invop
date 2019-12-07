@@ -154,12 +154,12 @@ def breadth_first_search(G, source, sink, padre):
         u = cola.pop(0)
         nei = vecinos(G, u)
         for k in nei:
-            if visitados[k] == False and G[u, k] > 0:
+            if visitados[k] == False and G[u, k] > 0 and G[u, k] !=np.inf:
                 cola.append(k)
-                visitados[k] == True
+                visitados[k] = True
                 padre[k] = u
 
-    return True if visited[sink] else False
+    return True if visitados[sink] else False
 
 
 def ford_fulkerson(G, source, sink):
@@ -171,8 +171,9 @@ def ford_fulkerson(G, source, sink):
         s = sink
         while (s != source):
             flujo_c = min(flujo_c, G[padre[s],s])
+            s = padre[s]
         
-        rv = rv * flujo_c
+        rv = rv + flujo_c
 
         v = sink
         while v != source:
@@ -184,4 +185,4 @@ def ford_fulkerson(G, source, sink):
     return rv
 
 if __name__ == "__main__":
-    ford_fulkerson(aver, 0, 5)
+    print(ford_fulkerson(aver, 0, 5))
