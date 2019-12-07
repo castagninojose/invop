@@ -26,25 +26,19 @@ class Grafo:
             rv = rv.union(aristas_i)
         return rv
 
-grafo = Grafo(WEIGHT_MATRIX_1)
-grafo.generate_edges()
 
 
-def edges_dict(G):
-    # generar diccionario con los ejes como keys y los valores de G como value
+def edges_dict_from_m(G):
+    # generar diccionario con las aristas como keys y los valores de G como values
+    n = G.shape[0]
     rv = {}
     for i in range(len(G)):
-        rv.update({(i, j): G[i, j] for j in range(len(G)) if j != i})
+        rv.update(
+            {(i, j): G[i, j] for j in range(n) if j != i}
+        )
     return rv
 
-
-def path_from_predecessor_vector(p, i, j):
-    # reconstruir camino a de i a j a partir de un vector `p` predecesor
-    # rv = [i]
-    # destino_col = p
-    # while destino_col[i] != j:
-    #     rv.append(i)
-    #     i = destino_col[i]
+def matrix_from_edges_d(d):
     pass
 
 def path_from_predecessor_matrix(p, i, j):
@@ -94,7 +88,7 @@ def prim(G):
 def bellman_ford(G, source):
     # init
     n = len(G)
-    aristas_d = edges_dict(G)
+    aristas_d = edges_dict_from_m(G)
     dist_l = [float('Inf')] * n
     predecessor = [-1] * n
     dist_l[source] = 0
@@ -171,7 +165,7 @@ def camino_superador(G, source, sink, padre):
 def ford_fulkerson(G, source, sink):
     
     # init
-    flujos_cap_d = edges_dict(G)
+    flujos_cap_d = edges_dict_from_m(G)
     flujos_residual = flujos_cap_d.copy()
     for arista in flujos_cap_d.keys():
         u, v = arista[0], arista[1]
