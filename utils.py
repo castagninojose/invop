@@ -147,14 +147,37 @@ def floyd_warshall(w_m):
 
 def camino_superador(G, source, sink, padre):
 
+    visitados = [False] * (G.shape[0])
+    cola = [] 
+        
+    cola.append(source) 
+    visitados[source] = True
+
+    while cola: 
+        u = cola.pop(0) 
+        
+        for v in vecinos(G, u): 
+            if visitados[v] == False and G[u,v] > 0: 
+                cola.append(v) 
+                visitados[v] = True
+                padre[v] = u
+
+    return True if visitados[sink] else False
+
 
 def ford_fulkerson(G, source, sink):
     
-    flujos_cap_d = edges_dict(rv_m)
+    # init
+    flujos_cap_d = edges_dict(G)
     for arista in flujos_cap_d.keys():
         print(f"flujo de {arista} en G': {flujos_cap_d[arista]}")
         if isinstance(flujos_cap_d[arista], int):
             flujos_cap_d.update({arista : 0})  # donde no hay ni `inf` ni `nan` pongo flujo 0
+
+    # mientras haya un camino `p` de `source` a `sink` en el residual con flujo > 0 en todas sus aristas:
+        # encontrar flujo(p) = min(flujo(u,v)
+
+    while camino_superador()
 
     return rv
 

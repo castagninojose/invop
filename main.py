@@ -88,11 +88,6 @@ def max_flow_with_demands(cap_m=CAPACITY_MATRIX, dem_m=DEMAND_MATRIX):
     rv_m = np.r_[rv_m, vacios_1]
     rv_m = np.c_[vacios_2, rv_m]
 
-    flujos_cap_d = edges_dict(rv_m)
-    for arista in flujos_cap_d.keys():
-        print(f"flujo de {arista} en G': {flujos_cap_d[arista]}")
-        if isinstance(flujos_cap_d[arista], int):
-            flujos_cap_d.update({arista : 0})  # donde no hay ni `inf` ni `nan`
     breakpoint()
 
     return ford_fulkerson(rv_m, n+1, n+2)
