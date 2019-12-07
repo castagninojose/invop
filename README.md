@@ -20,6 +20,7 @@ Se reduce a buscar el maximo flujo en un grafo `G' = (V', E')` definiendolo del 
 Luego para cada arista `(u, v)` en `G` seteamos las capacidades `c'` asi:
 
 * Una arista `(u, v)` con capacidad igual a la diferencia entre el tope y el piso de `(u, v)` en `G`.
-* 
+* Una arista `(s', v)` con capacidad igual al piso de `(u, v)`
+* Una arista `(u, t')` con capacidad igual al piso de `(u, v)`
 
-[ref](https://pdfs.semanticscholar.org/03a2/785783f43202925da70ae842eeda9cebd77e.pdf)
+[Ref](https://pdfs.semanticscholar.org/03a2/785783f43202925da70ae842eeda9cebd77e.pdf)
