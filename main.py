@@ -2,7 +2,7 @@ import numpy as np
 import argparse
 from itertools import combinations
 
-from utils import prim, edges_dict, bellman_ford, floyd_warshall
+from utils import prim, edges_dict, bellman_ford, floyd_warshall, ford_fulkerson
 from constants import WEIGHT_MATRIX_1, CURRENCY_MATRIX, CAPACITY_MATRIX, DEMAND_MATRIX
 
 def monet_arbit(G):
@@ -87,7 +87,7 @@ def max_flow_with_demands(cap_m=CAPACITY_MATRIX, dem_m=DEMAND_MATRIX):
     rvm = np.r_[rvm, vacios_1]
     rvm = np.c_[vacios_2, rvm]
 
-    return rvm
+    return ford_fulkerson(rvm, n+1, n+2)
 
    
 if __name__ == "__main__":
