@@ -3,8 +3,23 @@ import numpy as np
 import argparse
 from itertools import combinations
 
-from utils import prim, bellman_ford, floyd_warshall, ford_fulkerson, matrix_from_edges_d
-from constants import WEIGHT_MATRIX_1, CURRENCY_MATRIX, CAPACITY_MATRIX, DEMAND_MATRIX
+from utils import (
+    prim,
+    bellman_ford,
+    floyd_warshall,
+    ford_fulkerson,
+    matrix_from_edges_d,
+    edges_dict_from_m
+    )
+
+from constants import (
+    WEIGHT_MATRIX_1,
+    CURRENCY_MATRIX,
+    CAPACITY_MATRIX,
+    DEMAND_MATRIX,
+    CAPACITY_MATRIX_1,
+    DEMAND_MATRIX_1
+    )
 
 def monet_arbit(G):
     """
@@ -76,7 +91,7 @@ def max_flow_with_demands(cap_m=CAPACITY_MATRIX, dem_m=DEMAND_MATRIX):
     """
     n = len(cap_m)
     rv_m = cap_m - dem_m
-    rv_m[n-1,0] = np.inf
+    rv_m[n-1,0] = 9991
     s = []
     t = [np.nan]
     for i in range(n):  # para cada vertice v
@@ -90,22 +105,33 @@ def max_flow_with_demands(cap_m=CAPACITY_MATRIX, dem_m=DEMAND_MATRIX):
     rv_m = np.r_[rv_m, vacios_1]
     rv_m = np.c_[vacios_2, rv_m]
 
-    _, flujo_factible_d = ford_fulkerson(rv_m, 0, n+1)
+    f1, flujo_factible_d, vvv = ford_fulkerson(rv_m, 0, n+1)
 
     matriz_aux = matrix_from_edges_d(flujo_factible_d)
-    matriz_aux = np.delete(matriz_aux, [0, n], 0)
-    matriz_aux = np.delete(matriz_aux, [0, n], 1)
+    matriz_aux = np.delete(matriz_aux, [0, n+1], 0)
+    matriz_aux = np.delete(matriz_aux, [0, n+1], 1)
+    matriz_aux[n-1, 0] = 0
+    
+    sarasa = matriz_aux.copy()
+    # breakpoint()
     for u in range(n):
         for v in range(n):
-            if isinstance(matriz_aux[u, v], float) and isinstance(cap_m[u, v], float):
+            if (cap_m[u, v] > 0):
                 matriz_aux[u, v] = cap_m[u, v] - matriz_aux[u, v]
-            elif isinstance(matriz_aux[v, u], float) and isinstance(cap_m[u, v], float):
+            if (dem_m[u, v] > 0):
                 matriz_aux[u, v] = matriz_aux[v, u] - dem_m[v, u]
-            else:
-                matriz_aux[u, v] = 0
-
-
-    return ford_fulkerson(matriz_aux, 0, n-1)
+            # else:
+            #     matriz_aux[u, v] = 0
+    # breakpoint()
+    f2, aver, puff = ford_fulkerson(matriz_aux, 0, n-1)
+    # f3, aver1, puffa = ford_fulkerson(sarasa, 0, n-1)
+    # breakpoint()
+    for arista in aver.keys():
+        u, v = arista[0], arista[1]
+        foo = aver[arista]
+        aver.update({arista : cap_m[u, v] - puff[u, v]})
+    breakpoint()
+    return f1+f2, aver
 
    
 if __name__ == "__main__":
@@ -130,7 +156,7 @@ if __name__ == "__main__":
         print(steiner_trees([1, 2, 4, 6], WEIGHT_MATRIX_1))
 
     elif args.ejercicio_4:
-        print(max_flow_with_demands())
+        print(max_flow_with_demands(cap_m=CAPACITY_MATRIX_1, dem_m=DEMAND_MATRIX_1))
     
     else:
         print(f"Elegir el ejercicio a resolver. Puede ver las opciones en main.py -h")

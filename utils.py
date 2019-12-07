@@ -6,7 +6,9 @@ import numpy as np
 
 from collections import defaultdict
 
-from constants import WEIGHT_MATRIX_1, CURRENCY_MATRIX, PAISES_DICT, EJ_4_21_CURRENCY_M, aver
+from constants import (
+    WEIGHT_MATRIX_1, CURRENCY_MATRIX, PAISES_DICT, EJ_4_21_CURRENCY_M, FF_TESTING_M
+    )
 
 
 class Grafo:
@@ -192,7 +194,6 @@ def camino_superador(G, source, sink, padre):
     visitados = [False] * (G.shape[0])
     cola = []
     cola.append(source)
-    print(source)
     visitados[source] = True
 
     while cola: 
@@ -234,15 +235,13 @@ def ford_fulkerson(G, source, sink):
 
         # actualizo capacidades residuales
         v = sink 
-        while(v !=  source): 
+        while(v != source): 
             u = padre[v]
-            R[u][v] -= flujo_camino 
-            R[v][u] += flujo_camino 
+            R[u][v] -= flujo_camino
+            R[v][u] += flujo_camino
             v = padre[v]
 
-    return rv, edges_dict_from_m(R)
+    return rv, edges_dict_from_m(R), R
 
 if __name__ == "__main__":
-    diccionario = edges_dict_from_m(WEIGHT_MATRIX_1)
-    print(diccionario)
-    print(matrix_from_edges_d(diccionario))
+    print(ford_fulkerson(FF_TESTING_M, 0, 5))
