@@ -2,7 +2,7 @@ import numpy as np
 import argparse
 from itertools import combinations
 
-from utils import prim, edges_dict, bellman_ford, floyd_warshall, ford_fulkerson
+from utils import prim, bellman_ford, floyd_warshall, ford_fulkerson
 from constants import WEIGHT_MATRIX_1, CURRENCY_MATRIX, CAPACITY_MATRIX, DEMAND_MATRIX
 
 def monet_arbit(G):
@@ -98,9 +98,10 @@ if __name__ == "__main__":
         )
 
     parser.add_argument("-2", "--ejercicio-2", action="store_true", default=False)
-    parser.add_argument("-3", "--ejercicio-3", action="store_true", default=False)
-    parser.add_argument("-4", "--ejercicio-4", action="store_true", default=False)
 
+    parser.add_argument("-3", "--ejercicio-3", action="store_true", default=False)
+
+    parser.add_argument("-4", "--ejercicio-4", action="store_true", default=False)
 
     args = parser.parse_args()
 
@@ -109,11 +110,10 @@ if __name__ == "__main__":
         bellman_ford(CURRENCY_MATRIX, 1)
 
     elif args.ejercicio_3:
-
         print(steiner_trees([1, 2, 4, 6], WEIGHT_MATRIX_1))
 
     elif args.ejercicio_4:
         print(max_flow_with_demands())
     
     else:
-        print(f"Elegir el ejercicio a resolver. Puede ver las opciones en main.py --help")
+        print(f"Elegir el ejercicio a resolver. Puede ver las opciones en main.py -h")

@@ -39,7 +39,14 @@ def edges_dict_from_m(G):
     return rv
 
 def matrix_from_edges_d(d):
-    pass
+    n = max([v[0] for v in d.keys()])
+    rv = np.empty((n,n))*np.nan
+    for arista in d.keys():
+        u, v = arista[0], arista[1]
+        if isinstance(G[u, v], int):
+            rv[u, v] = G[u, v]
+    
+    return rv
 
 def path_from_predecessor_matrix(p, i, j):
     rv = []
@@ -176,8 +183,8 @@ def ford_fulkerson(G, source, sink):
         # encontrar flujo(p) = min(flujo(u,v)
 
     padre = [-1] * G.shape[0]
-    breakpoint()
-    while camino_superador(G, source, sink, padre)[0]:
+    R = matrix_from_edges_d(flujos_cap_d)
+    while camino_superador(R, source, sink, padre)[0]:
         pass
 
     return rv
