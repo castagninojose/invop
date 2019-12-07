@@ -72,22 +72,22 @@ def max_flow_with_demands(cap_m=CAPACITY_MATRIX, dem_m=DEMAND_MATRIX):
         dem_m : numpy.array de dos dimensiones con los minimos de las aristas
     """
     n = len(cap_m)
-    rvm = cap_m - dem_m
-    rvm[n-1,0] = np.inf
+    rv_m = cap_m - dem_m
+    rv_m[n-1,0] = np.inf
     s = []
     t = [np.nan]
-    for i in range(n):
-        t.append(dem_m[i][~np.isnan(dem_m[i])].sum())
+    for i in range(n):  # para cada vertice v
+        t.append(dem_m[i][~np.isnan(dem_m[i])].sum())  # cap de de s' a v es la suma de las demandas de sus vecinos en G
         s.append(dem_m[:,i][~np.isnan(dem_m[:,i])].sum())
     
-    rvm = np.r_[[s], rvm]
-    rvm = np.c_[rvm, np.array(t)]
-    vacios_1 = np.empty((1,n+1))*np.nan
+    rv_m = np.r_[[s], rv_m]
+    rv_m = np.c_[rv_m, np.array(t)]
+    vacios_1 = np.empty((1, n+1))*np.nan
     vacios_2 = np.empty((n+2, 1))*np.nan
-    rvm = np.r_[rvm, vacios_1]
-    rvm = np.c_[vacios_2, rvm]
+    rv_m = np.r_[rv_m, vacios_1]
+    rv_m = np.c_[vacios_2, rv_m]
 
-    return ford_fulkerson(rvm, n+1, n+2)
+    return ford_fulkerson(rv_m, n+1, n+2)
 
    
 if __name__ == "__main__":
