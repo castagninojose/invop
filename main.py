@@ -3,7 +3,7 @@ import numpy as np
 import argparse
 from itertools import combinations
 
-from utils import prim, bellman_ford, floyd_warshall, ford_fulkerson
+from utils import prim, bellman_ford, floyd_warshall, ford_fulkerson, matrix_from_edges_d
 from constants import WEIGHT_MATRIX_1, CURRENCY_MATRIX, CAPACITY_MATRIX, DEMAND_MATRIX
 
 def monet_arbit(G):
@@ -90,8 +90,24 @@ def max_flow_with_demands(cap_m=CAPACITY_MATRIX, dem_m=DEMAND_MATRIX):
     rv_m = np.r_[rv_m, vacios_1]
     rv_m = np.c_[vacios_2, rv_m]
 
+    _, flujo_factible_d = ford_fulkerson(rv_m, 0, n+1)
 
-    return ford_fulkerson(rv_m, 0, n+1)
+    martriz_falopa = matrix_from_edges_d(flujo_factible_d)
+    martriz_falopa = np.delete(martriz_falopa, [0, n], 0)
+    martriz_falopa = np.delete(martriz_falopa, [0, n], 1)
+    for u in range(n):
+        for v in range(n):
+            if isinstance(martriz_falopa[u, v], float):
+                martriz_falopa[u, v] = cap_m[u, v] - martriz_falopa[u, v]
+            if isinstance(martriz_falopa[v, u], float):
+                martriz_falopa[u, v] = martriz_falopa[v, u] - dem_m[v, u]
+            else:
+                martriz_falopa[u, v] = 0
+
+    breakpoint()
+    flujjjo, nuevo_f = ford_fulkerson(martriz_falopa, 0, n)
+
+    return flujjjo, nuevo_f
 
    
 if __name__ == "__main__":
