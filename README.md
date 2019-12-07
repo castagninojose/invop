@@ -1,6 +1,6 @@
 # Uso
 
-`python main.py -e` reemplazando por `e` por 2, 3 o 4
+`python main.py -e` reemplazando por `e` por `2`, `3` o `4`
 
 ### Ejercicio 2:
 
@@ -16,7 +16,7 @@ El algoritmo de Steiner. [Graphs, Networks and algorithms](https://doc.lagout.or
 Máximo flujo para un grafo `G = (V, E)` donde las aristas además de un tope tienen también un piso mímino de flujo.
 Se reduce a buscar el maximo flujo en un grafo `G' = (V', E')` definiendolo del siguiente modo:
 
-`V' = V + {s', t'}` con s' y t' nuevos source y sink respectivamente.  
+`V' = V + {s', t'}` con `s'` y `t'` nuevos source y sink respectivamente.  
 Luego para cada arista `(u, v)` en `G` seteamos las capacidades `c'` asi:
 
 * Una arista `(u, v)` con capacidad igual a la diferencia entre el tope y el piso de `(u, v)` en `G`.

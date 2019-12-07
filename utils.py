@@ -6,7 +6,9 @@ from constants import WEIGHT_MATRIX_1, CURRENCY_MATRIX, PAISES_DICT, EJ_4_21_CUR
 
 
 class Grafo:
-    
+    """
+    Para representar grafos. Deprecada por ahora :(
+    """
     def __init__(self, adj_m=[]):
         self.adj_m = adj_m
         self.vertices = np.arange(self.adj_m.shape[1])
@@ -29,7 +31,13 @@ class Grafo:
 
 
 def edges_dict_from_m(G):
-    # generar diccionario con las aristas como keys y los valores de G como values
+    """
+    Genera diccionario con las aristas como keys y los valores como values.
+    Args:
+        G = numpy.array
+    Returns:
+        dict con las aristas y pesos representados por G como keys y values respectivamente.
+    """
     n = G.shape[0]
     rv = {}
     for i in range(len(G)):
@@ -39,7 +47,17 @@ def edges_dict_from_m(G):
     return rv
 
 def matrix_from_edges_d(d):
-    n = max([v[0] for v in d.keys()])
+    """
+    Genera una matriz a partir de un diccionario de aristas.
+    Args:
+        `d` = dict con aristas como keys y sus "pesos". {(u,v) : peso(u, v)}
+    Returns:
+        numpy.array de dos dimensiones (matriz de nxn)
+    """
+    n = max(
+        [v[0] for v in d.keys()]
+    )  # para obtener el tamaño de la matrix me fijo el indice maximo de los vertices
+
     rv = np.empty((n,n))*np.nan
     for arista in d.keys():
         u, v = arista[0], arista[1]
@@ -49,6 +67,9 @@ def matrix_from_edges_d(d):
     return rv
 
 def path_from_predecessor_matrix(p, i, j):
+    """
+    Buscar camino del vertice `i` al `j` usando la matriz de predecesores `p`.
+    """
     rv = []
     destino_col = p[j, :]
     while i != j:
@@ -58,11 +79,20 @@ def path_from_predecessor_matrix(p, i, j):
     return rv
 
 def vecinos(G, v):
+    """
+    Genera una lista con los vecinos del vertice `v` en `G`.
+    """
     aristas_finitas = G[v,:] < np.inf
     vecinos_lista = np.where(aristas_finitas.tolist())[0]
     return vecinos_lista
 
 def ix_min(key, vis_l):
+    """
+    Busca el minimo en `key` ignorando los indices que aparecen en `vis_l`.
+    Args:
+        key : list de enteros
+        vis_l : list de booleanos
+    """
     k_array = np.array(key)
     k_array[vis_l] = np.inf
     return np.argmin(k_array)
@@ -139,8 +169,8 @@ def floyd_warshall(w_m):
             if dist_m[i, k] == np.inf:
                 continue
             for j in range(n):
-                if dist_m[i,j] > dist_m[i,k] + dist_m[k,j]:
-                    dist_m[i, j] = dist_m[i,k] + dist_m[k,j]
+                if dist_m[i, j] > dist_m[i, k] + dist_m[k, j]:
+                    dist_m[i, j] = dist_m[i, k] + dist_m[k, j]
                     predecessor_m[i, j] = predecessor_m[k, j]
 
     return dist_m, predecessor_m
