@@ -92,22 +92,20 @@ def max_flow_with_demands(cap_m=CAPACITY_MATRIX, dem_m=DEMAND_MATRIX):
 
     _, flujo_factible_d = ford_fulkerson(rv_m, 0, n+1)
 
-    martriz_falopa = matrix_from_edges_d(flujo_factible_d)
-    martriz_falopa = np.delete(martriz_falopa, [0, n], 0)
-    martriz_falopa = np.delete(martriz_falopa, [0, n], 1)
+    matriz_aux = matrix_from_edges_d(flujo_factible_d)
+    matriz_aux = np.delete(matriz_aux, [0, n], 0)
+    matriz_aux = np.delete(matriz_aux, [0, n], 1)
     for u in range(n):
         for v in range(n):
-            if isinstance(martriz_falopa[u, v], float):
-                martriz_falopa[u, v] = cap_m[u, v] - martriz_falopa[u, v]
-            if isinstance(martriz_falopa[v, u], float):
-                martriz_falopa[u, v] = martriz_falopa[v, u] - dem_m[v, u]
+            if isinstance(matriz_aux[u, v], float) and isinstance(cap_m[u, v], float):
+                matriz_aux[u, v] = cap_m[u, v] - matriz_aux[u, v]
+            elif isinstance(matriz_aux[v, u], float) and isinstance(cap_m[u, v], float):
+                matriz_aux[u, v] = matriz_aux[v, u] - dem_m[v, u]
             else:
-                martriz_falopa[u, v] = 0
+                matriz_aux[u, v] = 0
 
-    breakpoint()
-    flujjjo, nuevo_f = ford_fulkerson(martriz_falopa, 0, n)
 
-    return flujjjo, nuevo_f
+    return ford_fulkerson(matriz_aux, 0, n-1)
 
    
 if __name__ == "__main__":
