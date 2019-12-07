@@ -72,6 +72,7 @@ def max_flow_with_demands(cap_m=CAPACITY_MATRIX, dem_m=DEMAND_MATRIX):
     Args:
         cap_m : numpy.array de dos dimensiones con los topes de las aristas
         dem_m : numpy.array de dos dimensiones con los minimos de las aristas
+    See `constants.py` for default values.
     """
     n = len(cap_m)
     rv_m = cap_m - dem_m
@@ -89,7 +90,8 @@ def max_flow_with_demands(cap_m=CAPACITY_MATRIX, dem_m=DEMAND_MATRIX):
     rv_m = np.r_[rv_m, vacios_1]
     rv_m = np.c_[vacios_2, rv_m]
 
-    return ford_fulkerson(rv_m, n+1, n+2)
+
+    return ford_fulkerson(rv_m, 0, n+1)
 
    
 if __name__ == "__main__":

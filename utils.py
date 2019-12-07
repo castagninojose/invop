@@ -63,13 +63,13 @@ def matrix_from_edges_d(d):
     """
     n = max(
         [v[0] for v in d.keys()]
-    )  # para obtener el tamaño de la matrix me fijo el indice maximo de los vertices
+    ) + 1 # para obtener el tamaño de la matrix me fijo el indice maximo de los vertices + 1
 
     rv = np.empty((n,n))*np.nan
-    for arista in d.keys():
+    for arista, value in d.items():
         u, v = arista[0], arista[1]
-        if isinstance(G[u, v], int):
-            rv[u, v] = G[u, v]
+        if isinstance(value, float):
+            rv[u, v] = value
     
     return rv
 
@@ -188,16 +188,15 @@ def floyd_warshall(w_m):
 
 
 def camino_superador(G, source, sink, padre):
-
+    
     visitados = [False] * (G.shape[0])
-    cola = [] 
-        
-    cola.append(source) 
+    cola = []
+    cola.append(source)
+    print(source)
     visitados[source] = True
 
     while cola: 
-        u = cola.pop(0) 
-        
+        u = cola.pop(0)
         for v in vecinos(G, u): 
             if visitados[v] == False and G[u,v] > 0: 
                 cola.append(v) 
@@ -220,15 +219,30 @@ def ford_fulkerson(G, source, sink):
         if isinstance(flujos_cap_d[arista], int):
             flujos_cap_d.update({arista : 0})  # donde no hay `inf` ni `nan` pongo flujo 0
 
-    # mientras haya un camino `p` de `source` a `sink` en el residual con flujo > 0 en todas sus aristas:
-        # encontrar flujo(p) = min(flujo(u,v)
-
     padre = [-1] * G.shape[0]
     R = matrix_from_edges_d(flujos_cap_d)
-    while camino_superador(R, source, sink, padre)[0]:
-        pass
+    rv = 0
+    while camino_superador(R, source, sink, padre)[0]:  # mientras haya camino superador en el residual
+        flujo_camino = np.inf
+        s = sink 
+        while(s !=  source): 
+            flujo_camino = min(flujo_camino, R[padre[s], s]) 
+            s = padre[s] 
 
-    return rv
+        # actualizo flujo maximo
+        rv +=  flujo_camino
+
+        # actualizo capacidades residuales
+        v = sink 
+        while(v !=  source): 
+            u = padre[v]
+            R[u][v] -= flujo_camino 
+            R[v][u] += flujo_camino 
+            v = padre[v]
+
+    return rv, edges_dict_from_m(R)
 
 if __name__ == "__main__":
-    print(prim(WEIGHT_MATRIX_1))
+    diccionario = edges_dict_from_m(WEIGHT_MATRIX_1)
+    print(diccionario)
+    print(matrix_from_edges_d(diccionario))
