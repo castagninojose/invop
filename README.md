@@ -1,6 +1,6 @@
 # Uso
 
-`python main.py --ejercicio <foo>` reemplazando por "ej2", "ej3" y "ej4"
+`python main.py -e` reemplazando por `e` por 2, 3 o 4
 
 ### Ejercicio 2:
 
