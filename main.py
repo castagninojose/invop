@@ -9,7 +9,8 @@ def monet_arbit(G):
     """
     Rutina del ejercicio 2 para encontrar oportunidad de arbitraje cambiario.
     Args:
-        G : numpy.array de dos dimensiones (matriz) con los precios de las monedas
+        G : numpy.array de dos dimensiones (matriz) con los precios de las monedas. `G[i,j]` es la
+            cantidad de moneda `j` que se puede comprar con una unidad de moneda `i`
     """
     # init: agrego un vertice y le asigno cero a las distancias de éste a todos los demás vertices
     n = len(G) 
@@ -77,7 +78,7 @@ def max_flow_with_demands(cap_m=CAPACITY_MATRIX, dem_m=DEMAND_MATRIX):
     s = []
     t = [np.nan]
     for i in range(n):  # para cada vertice v
-        t.append(dem_m[i][~np.isnan(dem_m[i])].sum())  # cap de de s' a v es la suma de las demandas de sus vecinos en G
+        t.append(dem_m[i][~np.isnan(dem_m[i])].sum())
         s.append(dem_m[:,i][~np.isnan(dem_m[:,i])].sum())
     
     rv_m = np.r_[[s], rv_m]
@@ -87,6 +88,11 @@ def max_flow_with_demands(cap_m=CAPACITY_MATRIX, dem_m=DEMAND_MATRIX):
     rv_m = np.r_[rv_m, vacios_1]
     rv_m = np.c_[vacios_2, rv_m]
 
+    flujos_cap_d = edges_dict(rv_m)
+    for arista in flujos_cap_d.keys():
+        print(f"flujo de {arista} en G': {flujos_cap_d[arista]}")
+        if isinstance(flujos_cap_d[arista], int):
+            flujos_cap_d.update({arista : 0})  # donde no hay ni `inf` ni `nan`
     breakpoint()
 
     return ford_fulkerson(rv_m, n+1, n+2)

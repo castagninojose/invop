@@ -145,42 +145,16 @@ def floyd_warshall(w_m):
     return dist_m, predecessor_m
 
 
-def breadth_first_search(G, source, sink, padre):
-    n = G.shape[0]
-    visitados = [False] * n
-    cola = [source]
-    visitados[source] = True
-    while cola:
-        u = cola.pop(0)
-        nei = vecinos(G, u)
-        for k in nei:
-            if visitados[k] == False and G[u, k] > 0 and G[u, k] != np.inf:
-                cola.append(k)
-                visitados[k] = True
-                padre[k] = u
-    breakpoint()
-    return True if visitados[sink] else False
+def camino_superador(G, source, sink, padre):
 
 
 def ford_fulkerson(G, source, sink):
-    padre = [-1] * G.shape[0]
-    rv = 0
-
-    while breadth_first_search(G, source, sink, padre):
-        flujo_c = np.inf
-        s = sink
-        while (s != source):
-            flujo_c = min(flujo_c, G[padre[s],s])
-            s = padre[s]
-        
-        rv = rv + flujo_c
-
-        v = sink
-        while v != source:
-            u = padre[v]
-            G[u,v] = G[u,v] - flujo_c
-            G[v,u] = G[v,u] + flujo_c
-            v = padre[v]
+    
+    flujos_cap_d = edges_dict(rv_m)
+    for arista in flujos_cap_d.keys():
+        print(f"flujo de {arista} en G': {flujos_cap_d[arista]}")
+        if isinstance(flujos_cap_d[arista], int):
+            flujos_cap_d.update({arista : 0})  # donde no hay ni `inf` ni `nan` pongo flujo 0
 
     return rv
 
