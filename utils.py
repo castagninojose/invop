@@ -101,7 +101,7 @@ def path_from_predecessor_matrix(P, i, j):
 
 def vecinos(G, v):
     """
-    Genera una lista con los vecinos del vertice `v` en `G`.
+    Genera una np.array con los vecinos del vertice `v` en `G`.
     """
     aristas_finitas = G[v,:] < np.inf
     vecinos_lista = np.where(aristas_finitas.tolist())[0]
@@ -121,6 +121,9 @@ def ix_min(key, vis_l):
 
 
 def prim(G):
+    """
+    Generar un MST para G.
+    """
     n = len(G)
     visitados = np.array([False] * n)
     key = np.array([np.inf] * n)
@@ -146,6 +149,10 @@ def prim(G):
 
 
 def bellman_ford(G, source):
+    """
+    Busca ciclos negativos en `G` desde `source`. En caso de no encontrar
+    devuelve el camino mas corto de `source` a los demas vertices de `G`.
+    """
     # init
     n = len(G)
     aristas_d = edges_dict_from_m(G)
@@ -224,7 +231,7 @@ def camino_superador(G, source, sink, padre):
         return False, padre
 
 
-def ford_fulkerson(G, source, sink, modificado=False, ff=None):
+def ford_fulkerson(G, source, sink, modificado=False, flujo_factible=None):
     """
     Args:
         - G : np.array
@@ -263,9 +270,9 @@ def ford_fulkerson(G, source, sink, modificado=False, ff=None):
                 # version modificada de actualizar las capacidades residuales
                 u = padre[v]
                 if isinstance(G[u, v], float):
-                    R[u, v] = R[u, v] - ff[(u, v)]
+                    R[u, v] = R[u, v] - flujo_factible[(u, v)]
                 elif isinstance(G[v, u], float):
-                    R[u, v] = ff[(v, u)] - R[v, u]
+                    R[u, v] = flujo_factible[(v, u)] - R[v, u]
                 else:
                     R[u, v] = 0
                 v = padre[v]

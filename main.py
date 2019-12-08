@@ -120,7 +120,7 @@ def max_flow_with_demands(cap_m=CAPACITY_MATRIX, dem_m=DEMAND_MATRIX):
     breakpoint()
     
     f2, aver_flujo, puff = ford_fulkerson(
-        matriz_aux, 0, n-1, modificado=True, ff=flujo_factible_d
+        matriz_aux, 0, n-1, modificado=True, flujo_factible=flujo_factible_d
     )
 
     return f2, aver_flujo
