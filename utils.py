@@ -176,11 +176,8 @@ def bellman_ford(G, source):
             camino = path_from_predecessor(predecessor, source, v)
             print(f"Camino: {camino}")
             return True, dist_l, predecessor
-        
     
     return False, dist_l, predecessor
-            
-
 
 
 def floyd_warshall(w_m):
@@ -283,6 +280,7 @@ def ford_fulkerson(G, source, sink, modificado=False, flujo_factible=None):
                 v = padre[v]
 
     return rv, edges_dict_from_m(G-R), R
+
 
 if __name__ == "__main__":
     print(ford_fulkerson(FF_TESTING_M, 0, 5))
