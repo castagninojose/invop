@@ -213,7 +213,7 @@ def camino_superador(G, source, sink, padre):
     while cola: 
         u = cola.pop(0)
         for v in vecinos(G, u): 
-            if visitados[v] == False and G[u,v] > 0: 
+            if visitados[v] == False and G[u, v] > 0: 
                 cola.append(v) 
                 visitados[v] = True
                 padre[v] = u
@@ -224,7 +224,7 @@ def camino_superador(G, source, sink, padre):
         return False, padre
 
 
-def ford_fulkerson(G, source, sink, modificado=False, caps=None, floors=None):
+def ford_fulkerson(G, source, sink, modificado=False, caps=None, floors=None, ff=None):
     """
     Args:
         - G : np.array
@@ -259,20 +259,20 @@ def ford_fulkerson(G, source, sink, modificado=False, caps=None, floors=None):
         # actualizo capacidades residuales
         v = sink
         while(v != source):
-            u = padre[v]
             if modificado:
                 # version modificada de actualizar las capacidades residuales
-                if (G[u, v] > 0):
-                    R[u, v] = caps[u, v] - flujo_camino
-                elif (G[v, u] > 0):
-                    R[u, v] = flujo_camino - floors[v, u]
+                u = padre[v]
+                if isinstance(G[u, v], float):
+                    R[u, v] = caps[u, v] - ff[(u, v)]
+                elif isinstance(G[v, u], float):
+                    R[u, v] = ff[(v, u)] - floors[v, u]
                 else:
                     R[u, v] = 0
                 v = padre[v]
             else:
                 u = padre[v]
-                R[u][v] -= flujo_camino
-                R[v][u] += flujo_camino
+                R[u, v] -= flujo_camino
+                R[v, u] += flujo_camino
                 v = padre[v]
 
     return rv, edges_dict_from_m(G-R), R
