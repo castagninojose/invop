@@ -96,8 +96,6 @@ def max_flow_with_demands(cap_m=CAPACITY_MATRIX, dem_m=DEMAND_MATRIX):
     for i in range(n):  # para cada vertice v
         t.append(dem_m[i][~np.isnan(dem_m[i])].sum())
         s.append(dem_m[:,i][~np.isnan(dem_m[:,i])].sum())
-
-    breakpoint()
     
     rv_m = np.r_[[s], rv_m]
     rv_m = np.c_[rv_m, np.array(t)]
@@ -105,8 +103,6 @@ def max_flow_with_demands(cap_m=CAPACITY_MATRIX, dem_m=DEMAND_MATRIX):
     vacios_2 = np.empty((n+2, 1))*np.nan
     rv_m = np.r_[rv_m, vacios_1]  # agrega fila vacia al final
     rv_m = np.c_[vacios_2, rv_m]  # agrega columna vacia al final
-
-    breakpoint()
 
     f1, flujo_factible_d, vvv = ford_fulkerson(rv_m, 0, n+1)
 
@@ -116,8 +112,6 @@ def max_flow_with_demands(cap_m=CAPACITY_MATRIX, dem_m=DEMAND_MATRIX):
     matriz_aux = np.delete(matriz_aux, [0, n+1], 1)
     matriz_aux[n-1, 0] = 0
     matriz_aux[0, n-1] = 0
-
-    breakpoint()
     
     f2, aver_flujo, puff = ford_fulkerson(
         matriz_aux, 0, n-1, modificado=True, flujo_factible=flujo_factible_d
