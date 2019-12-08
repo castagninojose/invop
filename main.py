@@ -9,7 +9,8 @@ from utils import (
     floyd_warshall,
     ford_fulkerson,
     matrix_from_edges_d,
-    edges_dict_from_m
+    edges_dict_from_m,
+    path_from_predecessor_matrix
     )
 
 from constants import (
@@ -18,29 +19,26 @@ from constants import (
     CAPACITY_MATRIX,
     DEMAND_MATRIX,
     CAPACITY_MATRIX_1,
-    DEMAND_MATRIX_1
+    DEMAND_MATRIX_1,
+    PAISES_DICT,
+    EJ_4_21_CURRENCY_M
     )
 
 def monet_arbit(G):
     """
     Rutina del ejercicio 2 para encontrar oportunidad de arbitraje cambiario.
     Args:
-        G : numpy.array de dos dimensiones (matriz) con los precios de las monedas. `G[i,j]` es la
-            cantidad de moneda `j` que se puede comprar con una unidad de moneda `i`
+        G : numpy.array de dos dimensiones (matriz) con los precios de las monedas. `G[i,j]` es
+            la cantidad de moneda `j` que se puede comprar con una unidad de moneda `i`.
     """
-    # init: agrego un vertice y le asigno cero a las distancias de éste a todos los demás vertices
-    n = len(G) 
-    v0_to_vi = np.zeros((1, n))
-    all_to_v0 = np.zeros((n+1, 1))
-    H = np.concatenate(G, v0_to_vi)
-    H = np.concatenate(H, all_to_v0, axis=1)
-    for i in range(n+1):
-        # para cada moneda quiero: si existe un camino negativo, devolverlo
-        bf = bellman_ford(H, i)
+    n = len(G)
+    for i in range(n):
+        # para cada moneda quiero: si existe un camino negativo, devolverlo. si no, dar camino menos costoso
+        bf = bellman_ford(G, i)
         if bf[0] == True: # ciclo negativo
             continue
         else:
-            rv.append()
+            print(bf[1], bf[2])
 
 
 def steiner_trees(R, w_m):
@@ -55,7 +53,6 @@ def steiner_trees(R, w_m):
     d, p = floyd_warshall(w_m)
     W = np.inf
     T = []
-    H = "Kn"  # grafo completo de n nodos
     S = np.delete(w_m, R, 0)
     S = np.delete(S, R, 1)
     for i in range(1, len(R)-2):
@@ -108,32 +105,45 @@ def max_flow_with_demands(cap_m=CAPACITY_MATRIX, dem_m=DEMAND_MATRIX):
     f1, flujo_factible_d, vvv = ford_fulkerson(rv_m, 0, n+1)
 
     matriz_aux = matrix_from_edges_d(flujo_factible_d)
+    
     matriz_aux = np.delete(matriz_aux, [0, n+1], 0)
     matriz_aux = np.delete(matriz_aux, [0, n+1], 1)
     matriz_aux[n-1, 0] = 0
+    matriz_aux[0, n-1] = 0
     
+    sandonga = matriz_aux.copy()
     sarasa = matriz_aux.copy()
     # breakpoint()
+    # for u in range(n):
+    #     for v in range(n):
+    #         if (cap_m[u, v] > 0):
+    #             matriz_aux[u, v] = cap_m[u, v] - matriz_aux[u, v]
+    #         if (dem_m[u, v] > 0):
+    #             matriz_aux[u, v] = matriz_aux[v, u] - dem_m[v, u]
+    #         # else:
+    #         #     matriz_aux[u, v] = 0
+    breakpoint()
+    f2, aver, puff = ford_fulkerson(matriz_aux, 0, n-1)
+    print(sarasa)
     for u in range(n):
         for v in range(n):
             if (cap_m[u, v] > 0):
-                matriz_aux[u, v] = cap_m[u, v] - matriz_aux[u, v]
-            if (dem_m[u, v] > 0):
-                matriz_aux[u, v] = matriz_aux[v, u] - dem_m[v, u]
-            # else:
-            #     matriz_aux[u, v] = 0
-    # breakpoint()
-    f2, aver, puff = ford_fulkerson(matriz_aux, 0, n-1)
-    # f3, aver1, puffa = ford_fulkerson(sarasa, 0, n-1)
-    # breakpoint()
+                sarasa[u, v] = sarasa[v, u] + dem_m[u, v]
+                puff[u, v] = puff[u, v] + puff[v, u]
+            else:
+                # (sarasa[u, v] > 0) and (sarasa[v, u] > 0) and (cap_m[v, u] > 0):
+                sarasa[u, v] = 0
+                puff[u, v] = 0
+
+    breakpoint()
     for arista in aver.keys():
         u, v = arista[0], arista[1]
         foo = aver[arista]
-        aver.update({arista : cap_m[u, v] - puff[u, v]})
+        aver.update({arista : cap_m[u, v] - sarasa[u, v] + matriz_aux[u, v] - puff[u, v]})
     breakpoint()
     return f1+f2, aver
 
-   
+
 if __name__ == "__main__":
     
     parser = argparse.ArgumentParser(
@@ -148,9 +158,10 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
+
     if args.ejercicio_2:
-        # monet_arbit(-np.log(CURRENCY_MATRIX))
-        bellman_ford(CURRENCY_MATRIX, 1)
+        monet_arbit(-np.log(EJ_4_21_CURRENCY_M))
+        # bellman_ford(CURRENCY_MATRIX, 1)
 
     elif args.ejercicio_3:
         print(steiner_trees([1, 2, 4, 6], WEIGHT_MATRIX_1))

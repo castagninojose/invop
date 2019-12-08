@@ -71,17 +71,17 @@ CURRENCY_MATRIX = np.array(  # M[i,j] = qty of currency j bought with currency i
     )
 
 PAISES_DICT = {  # useful for ex 2
-    0: 'argentina',
-    1: 'eeuu',
-    2: 'chile',
-    3: 'brasil',
-    4: 'uruguay',
-    5: 'paraguay',
-    6: 'bolivia',
-    7: 'peru',
-    8: 'colombia',
-    9: 'canada',
-    10: 'mexico',
+    0: 'Pesos argentinos',
+    1: 'Dolares Americanos',
+    2: 'Pesos Chilenos',
+    3: 'Reales',
+    4: 'Peso uruguayo',
+    5: 'Guaranies',
+    6: 'Bolivianos',
+    7: 'Soles',
+    8: 'Peso colombiano',
+    9: 'Dolar canadiense',
+    10: 'Peso mexicano',
     # 11: 'venezuela',
     # 12: 'ecuador'
 }

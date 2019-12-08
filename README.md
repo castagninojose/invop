@@ -1,6 +1,6 @@
 # Uso
 
-`python main.py -e` reemplazando por `e` por `2`, `3` o `4`
+`python main.py -<e>` reemplazando `e` alguno de los ejercicios 2, 3 o 4.
 
 ### Ejercicio 2:
 
