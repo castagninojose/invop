@@ -7,8 +7,14 @@ import numpy as np
 from collections import defaultdict
 
 from constants import (
-    WEIGHT_MATRIX_1, CURRENCY_MATRIX, PAISES_DICT, EJ_4_21_CURRENCY_M, FF_TESTING_M
-    )
+    WEIGHT_MATRIX_1,
+    CURRENCY_MATRIX,
+    PAISES_DICT,
+    EJ_4_21_CURRENCY_M,
+    FF_TESTING_M,
+    CAPACITY_MATRIX,
+    DEMAND_MATRIX,
+)
 
 
 class Grafo:
@@ -41,14 +47,14 @@ def edges_dict_from_m(G):
     Genera diccionario con las aristas como keys y los valores como values.
     Args:
         G = numpy.array
-    Returns:
+    Devuelve:
         dict con las aristas y pesos representados por G como keys y values respectivamente.
-    Note: 
+    Nota: 
         Ignora las diagonales ya que asume que no hay self-loops (i.e.) aristas `(u,u)`.
     """
     n = G.shape[0]
     rv = {}
-    for i in range(len(G)):
+    for i in range(n):
         rv.update(
             {(i, j): G[i, j] for j in range(n) if j != i}
         )
@@ -60,12 +66,12 @@ def matrix_from_edges_d(d):
     Genera una matriz a partir de un diccionario de aristas.
     Args:
         `d` = dict con aristas como keys y sus "pesos". {(u,v) : peso(u, v)}.
-    Returns:
+    Devuelve:
         numpy.array de dos dimensiones (matriz de nxn).
     """
-    n = max(
+    n = 1 + max(
         [v[0] for v in d.keys()]
-    ) + 1 # para obtener el tamaño de la matrix me fijo el indice maximo de los vertices + 1
+    )  # para ver el tamaño de la matrix me fijo el indice maximo de los vertices + 1
 
     rv = np.empty((n,n))*np.nan
     for arista, value in d.items():
@@ -254,4 +260,6 @@ def ford_fulkerson(G, source, sink):
     return rv, edges_dict_from_m(R), R
 
 if __name__ == "__main__":
-    print(ford_fulkerson(FF_TESTING_M, 0, 5))
+    # print(ford_fulkerson(FF_TESTING_M, 0, 5))
+    breakpoint()
+    edges_dict_from_m(DEMAND_MATRIX)
