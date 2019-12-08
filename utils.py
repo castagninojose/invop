@@ -75,18 +75,23 @@ def matrix_from_edges_d(d):
     
     return rv
 
+def path_from_predecessor(p, i, j):
+    """
+    Buscar camino del vertice `i` al `j` usando la matriz de predecesores `p`.
+    """
+    rv = []
+    while i != j:
+        rv.append([i, p[i]])
+        i = p[i]
+
+    return rv
+
 
 def path_from_predecessor_matrix(p, i, j):
     """
     Buscar camino del vertice `i` al `j` usando la matriz de predecesores `p`.
     """
-    rv = []
-    destino_col = p[j, :]
-    while i != j:
-        rv.append([i, destino_col[i]])
-        i = destino_col[i]
-
-    return rv
+    return path_from_predecessor(p[j,:], i, j)
 
 
 def vecinos(G, v):
@@ -153,12 +158,12 @@ def bellman_ford(G, source):
     # now look for negative weight cycles
     for e in aristas_d:
         if (dist_l[e[1]] != float('Inf') and dist_l[e[1]] > dist_l[e[0]]):
-            print(f"Existe ciclo negativo p: {predecessor}")
-            ciclo_negativo_flag = True
+            print(f"Existe ciclo negativo entre {PAISES_DICT[source]} y {PAISES_DICT[e[1]]}")
+            print(f"Camino: {path_from_predecessor(predecessor, source, e[1])}")
             return True, dist_l, predecessor
         else:
             continue
-            
+
     return dist_l, predecessor
 
 
