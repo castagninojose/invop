@@ -264,7 +264,7 @@ def ford_fulkerson(G, source, sink, modificado=False, caps=None, floors=None):
                 # version modificada de actualizar las capacidades residuales
                 if (G[u, v] > 0):
                     R[u, v] = caps[u, v] - flujo_camino
-                elif (G[u, v] > 0):
+                elif (G[v, u] > 0):
                     R[u, v] = flujo_camino - floors[v, u]
                 else:
                     R[u, v] = 0
