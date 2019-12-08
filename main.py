@@ -112,36 +112,12 @@ def max_flow_with_demands(cap_m=CAPACITY_MATRIX, dem_m=DEMAND_MATRIX):
     matriz_aux[n-1, 0] = 0
     matriz_aux[0, n-1] = 0
     
-    sandonga = matriz_aux.copy()
-    sarasa = matriz_aux.copy()
-    # for u in range(n):
-    #     for v in range(n):
-    #         if (cap_m[u, v] > 0):
-    #             matriz_aux[u, v] = cap_m[u, v] - matriz_aux[u, v]
-    #         if (dem_m[u, v] > 0):
-    #             matriz_aux[u, v] = matriz_aux[v, u] - dem_m[v, u]
-    #         # else:
-    #         #     matriz_aux[u, v] = 0
+    f2, aver_flujo, puff = ford_fulkerson(
+        matriz_aux, 0, n-1, modificado=True, caps=CAPACITY_MATRIX, floors=DEMAND_MATRIX
+        )
     breakpoint()
-    f2, aver, puff = ford_fulkerson(matriz_aux, 0, n-1)
-    print(sarasa)
-    for u in range(n):
-        for v in range(n):
-            if (cap_m[u, v] > 0):
-                sarasa[u, v] = sarasa[v, u] + dem_m[u, v]
-                puff[u, v] = puff[u, v] + puff[v, u]
-            else:
-                # (sarasa[u, v] > 0) and (sarasa[v, u] > 0) and (cap_m[v, u] > 0):
-                sarasa[u, v] = 0
-                puff[u, v] = 0
-
-    breakpoint()
-    for arista in aver.keys():
-        u, v = arista[0], arista[1]
-        foo = aver[arista]
-        aver.update({arista : cap_m[u, v] - sarasa[u, v] + matriz_aux[u, v] - puff[u, v]})
-    breakpoint()
-    return f1+f2, aver
+    
+    return f2, aver_flujo
 
 
 if __name__ == "__main__":

@@ -62,7 +62,7 @@ def matrix_from_edges_d(d):
     """
     Genera una matriz a partir de un diccionario de aristas.
     Args:
-        `d` = dict con aristas como keys y sus "pesos". {(u,v) : peso(u, v)}.
+        d = dict con aristas como keys y sus "pesos". {(u,v) : peso(u, v)}.
     Devuelve:
         numpy.array de dos dimensiones (matriz de nxn).
     """
@@ -112,8 +112,8 @@ def ix_min(key, vis_l):
     """
     Busca el minimo en `key` ignorando los indices que aparecen en `vis_l`.
     Args:
-        key : list de enteros
-        vis_l : list de booleanos
+        - key : list de enteros
+        - vis_l : list de booleanos
     """
     k_array = np.array(key)
     k_array[vis_l] = np.inf
@@ -225,7 +225,16 @@ def camino_superador(G, source, sink, padre):
         return False, padre
 
 
-def ford_fulkerson(G, source, sink):
+def ford_fulkerson(G, source, sink, modificado=False, caps=None, floors=None):
+    """
+    Args:
+        - G : np.array
+        - source : int
+        - sink : int
+        - (opcional) modificado : boolean para ejecutar la version modificada necesaria para la ultima parte del ej 4.
+        - (opcional) caps : np.array con las capacidades de las aristas
+        - (opcional) floors : np.array con las demandas de las aristas.
+    """
     
     # init
     flujos_cap_d = edges_dict_from_m(G)
@@ -249,12 +258,22 @@ def ford_fulkerson(G, source, sink):
         rv +=  flujo_camino
 
         # actualizo capacidades residuales
-        v = sink 
-        while(v != source): 
-            u = padre[v]
-            R[u][v] -= flujo_camino
-            R[v][u] += flujo_camino
-            v = padre[v]
+        v = sink
+        while(v != source):
+            if modificado:
+                u = padre[v]
+                if isinstance(G[u, v], float):
+                    R[u, v] = caps[u, v] - G[u, v]
+                if isinstance(G[v, u], float):
+                    R[u, v] = G[v, u] - floors[v, u]
+                else:
+                    R[u, v] = 0
+                v = padre[v]
+            else:
+                u = padre[v]
+                R[u][v] -= flujo_camino
+                R[v][u] += flujo_camino
+                v = padre[v]
 
     return rv, edges_dict_from_m(R), R
 
