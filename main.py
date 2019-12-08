@@ -114,7 +114,6 @@ def max_flow_with_demands(cap_m=CAPACITY_MATRIX, dem_m=DEMAND_MATRIX):
     
     sandonga = matriz_aux.copy()
     sarasa = matriz_aux.copy()
-    # breakpoint()
     # for u in range(n):
     #     for v in range(n):
     #         if (cap_m[u, v] > 0):

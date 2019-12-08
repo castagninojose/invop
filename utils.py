@@ -4,8 +4,6 @@ Hacia el final aparecen algunas implementaciones de subrutinas utiles para los a
 """
 import numpy as np
 
-from collections import defaultdict
-
 from constants import (
     WEIGHT_MATRIX_1,
     CURRENCY_MATRIX,
@@ -41,7 +39,6 @@ class Grafo:
         return rv
 
 
-
 def edges_dict_from_m(G):
     """
     Genera diccionario con las aristas como keys y los valores como values.
@@ -70,10 +67,11 @@ def matrix_from_edges_d(d):
         numpy.array de dos dimensiones (matriz de nxn).
     """
     n = 1 + max(
-        [v[0] for v in d.keys()]
+        [v[0] for v in d.keys()] + [v[1] for v in d.keys()]
     )  # para ver el tamaño de la matrix me fijo el indice maximo de los vertices + 1
 
     rv = np.empty((n,n))*np.nan
+
     for arista, value in d.items():
         u, v = arista[0], arista[1]
         if isinstance(value, float):
@@ -81,9 +79,10 @@ def matrix_from_edges_d(d):
     
     return rv
 
+
 def path_from_predecessor(p, i, j):
     """
-    Buscar camino del vertice `i` al `j` usando la matriz de predecesores `p`.
+    Buscar camino del vertice `i` al `j` usando un vector `p` de predecesores.
     """
     rv = []
     while i != j:
@@ -93,11 +92,11 @@ def path_from_predecessor(p, i, j):
     return rv
 
 
-def path_from_predecessor_matrix(p, i, j):
+def path_from_predecessor_matrix(P, i, j):
     """
-    Buscar camino del vertice `i` al `j` usando la matriz de predecesores `p`.
+    Buscar camino del vertice `i` al `j` usando la matriz de predecesores `P`.
     """
-    return path_from_predecessor(p[j,:], i, j)
+    return path_from_predecessor(P[j,:], i, j)
 
 
 def vecinos(G, v):
@@ -261,5 +260,17 @@ def ford_fulkerson(G, source, sink):
 
 if __name__ == "__main__":
     # print(ford_fulkerson(FF_TESTING_M, 0, 5))
-    breakpoint()
-    edges_dict_from_m(DEMAND_MATRIX)
+    slacks = CAPACITY_MATRIX - DEMAND_MATRIX
+    floors = edges_dict_from_m(DEMAND_MATRIX)
+    caps = edges_dict_from_m(CAPACITY_MATRIX)
+    n = CAPACITY_MATRIX.shape[0]
+    nuevo_g = {}
+    for arista, w in floors.items():
+        u, v = arista[0], arista[1]
+        if (u, v) in nuevo_g.keys():
+            nuevo_g.update({(u, v) : nuevo_g[u, v] + w})
+        nuevo_g.update({(u, v) : slacks[u, v]})
+        nuevo_g.update({(n, v) : w})
+        nuevo_g.update({(u, n+1) : w})
+    
+    print(matrix_from_edges_d(nuevo_g))
