@@ -47,7 +47,7 @@ CAPACITY_MATRIX_1 = np.array(  # upper bounds for flow problems
     [0, 0, 0, 0, 0, 0]]
 )
 
-DEMAND_MATRIX_1 = np.array(  # upper bounds for flow problems
+DEMAND_MATRIX_1 = np.array(  # lower bounds for flow problems
     [[0, 7, 4, 0, 0,0],
     [0, 0, 5, 0, 0, 0],
     [0, 0, 0, 3, 0, 0],
@@ -56,7 +56,7 @@ DEMAND_MATRIX_1 = np.array(  # upper bounds for flow problems
     [0, 0, 0, 0, 0, 0]]
 )
 
-CURRENCY_MATRIX = np.array(  # M[i,j] = qty of currency j bought with currency i
+CURRENCY_MATRIX = np.array(  # M[i,j] = cantidad de j que se puede comprar con i
     [[1, 0.0167, 14.073, 0.0703, 0.625, 106.016, 0.112, 0.0556, 58.539, 0.0222, 0.326],
     [59.837, 1, 842.312, 4.208, 37.431, 6345.05, 7.732, 3.329, 3503.57, 1.329, 19.509],
     [0.071, 0.00119, 1, 0.00499, 0.0444, 7.526, 0.00799, 0.00395, 4.156, 0.00158, 0.0231],
@@ -68,20 +68,20 @@ CURRENCY_MATRIX = np.array(  # M[i,j] = qty of currency j bought with currency i
     [0.017, 0.00028, 0.24, 0.0012, 0.011, 1.79, 0.0019, 0.00094, 1, 0.00038, 0.0055],
     [45.03, 0.75, 633.86, 3.17, 28.17, 4774.8, 5.06, 2.5, 2636.5, 1, 14.68],
     [3.065, 0.0512, 43.15, 0.215, 1.918, 325.04, 0.345, 0.17, 179.48, 0.068, 1]]
-    )
+)
 
-PAISES_DICT = {  # useful for ex 2
-    0: 'Pesos argentinos',
-    1: 'Dolares Americanos',
-    2: 'Pesos Chilenos',
-    3: 'Reales',
-    4: 'Peso uruguayo',
-    5: 'Guaranies',
-    6: 'Bolivianos',
-    7: 'Soles',
-    8: 'Peso colombiano',
-    9: 'Dolar canadiense',
-    10: 'Peso mexicano',
+PAISES_DICT = {  # para el ej 2
+    0: 'pesos argentinos',
+    1: 'dolares americanos',
+    2: 'pesos chilenos',
+    3: 'reales',
+    4: 'peso uruguayo',
+    5: 'guaranies',
+    6: 'bolivianos',
+    7: 'soles',
+    8: 'peso colombiano',
+    9: 'dolar canadiense',
+    10: 'peso mexicano',
     # 11: 'venezuela',
     # 12: 'ecuador'
 }

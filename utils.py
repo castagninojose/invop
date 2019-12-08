@@ -159,12 +159,13 @@ def bellman_ford(G, source):
     for e in aristas_d:
         if (dist_l[e[1]] != float('Inf') and dist_l[e[1]] > dist_l[e[0]]):
             print(f"Existe ciclo negativo entre {PAISES_DICT[source]} y {PAISES_DICT[e[1]]}")
-            print(f"Camino: {path_from_predecessor(predecessor, source, e[1])}")
+            camino = path_from_predecessor(predecessor, source, e[1])
+            print(f"Camino: {camino}")
             return True, dist_l, predecessor
         else:
-            continue
+            return False, dist_l, predecessor
+            
 
-    return dist_l, predecessor
 
 
 def floyd_warshall(w_m):

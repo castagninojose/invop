@@ -32,7 +32,7 @@ def monet_arbit(G):
             la cantidad de moneda `j` que se puede comprar con una unidad de moneda `i`.
     """
     n = len(G)
-    for i in range(n):
+    for i in range(n-1):
         # para cada moneda quiero: si existe un camino negativo, devolverlo. si no, dar camino menos costoso
         bf = bellman_ford(G, i)
         if bf[0] == True: # ciclo negativo
@@ -62,7 +62,6 @@ def steiner_trees(R, w_m):
             P = np.delete(S, list(c), 0)
             P = np.delete(P, list(c), 1)
             T_prima, z = prim(P)
-            print(f"T_prima:{T_prima}, z:{z}, w:{W}")
             if z < W:
                 W = z
                 T = T_prima
