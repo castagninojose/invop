@@ -151,19 +151,23 @@ def bellman_ford(G, source):
     # relax
     for i in range(n-1):
         for e in aristas_d.keys():
-            if (dist_l[e[1]] > dist_l[e[0]] + aristas_d[e]):
-                dist_l[e[1]] = dist_l[e[0]] + aristas_d[e]
-                predecessor[e[1]] = e[0]
+            u, v = e[0], e[1]
+            if (dist_l[v] > dist_l[u] + aristas_d[e]):
+                dist_l[v] = dist_l[u] + aristas_d[e]
+                predecessor[v] = u
     
     # now look for negative weight cycles
     for e in aristas_d:
-        if (dist_l[e[1]] != float('Inf') and dist_l[e[1]] > dist_l[e[0]]):
-            print(f"Existe ciclo negativo entre {PAISES_DICT[source]} y {PAISES_DICT[e[1]]}")
-            camino = path_from_predecessor(predecessor, source, e[1])
+        u, v = e[0], e[1]
+        if (dist_l[v] != float('Inf') and dist_l[v] > dist_l[u]):
+            print(f"Existe ciclo negativo entre {PAISES_DICT[source]} y {PAISES_DICT[v]}")
+            # breakpoint()
+            camino = path_from_predecessor(predecessor, source, v)
             print(f"Camino: {camino}")
             return True, dist_l, predecessor
-        else:
-            return False, dist_l, predecessor
+        
+    
+    return False, dist_l, predecessor
             
 
 

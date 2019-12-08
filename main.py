@@ -32,12 +32,14 @@ def monet_arbit(G):
             la cantidad de moneda `j` que se puede comprar con una unidad de moneda `i`.
     """
     n = len(G)
-    for i in range(n-1):
-        # para cada moneda quiero: si existe un camino negativo, devolverlo. si no, dar camino menos costoso
+    for i in range(n):
+        print(f"Moneda: {PAISES_DICT[i]}")
         bf = bellman_ford(G, i)
         if bf[0] == True: # ciclo negativo
+            # aca bellman-ford imprime el camino del ciclo negativo
             continue
         else:
+            # devolver los caminos menos costosos
             print(bf[1], bf[2])
 
 
@@ -160,7 +162,6 @@ if __name__ == "__main__":
 
     if args.ejercicio_2:
         monet_arbit(-np.log(EJ_4_21_CURRENCY_M))
-        # bellman_ford(CURRENCY_MATRIX, 1)
 
     elif args.ejercicio_3:
         print(steiner_trees([1, 2, 4, 6], WEIGHT_MATRIX_1))
