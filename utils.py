@@ -224,7 +224,7 @@ def camino_superador(G, source, sink, padre):
         return False, padre
 
 
-def ford_fulkerson(G, source, sink, modificado=False, caps=None, floors=None, ff=None):
+def ford_fulkerson(G, source, sink, modificado=False, ff=None):
     """
     Args:
         - G : np.array
@@ -263,9 +263,9 @@ def ford_fulkerson(G, source, sink, modificado=False, caps=None, floors=None, ff
                 # version modificada de actualizar las capacidades residuales
                 u = padre[v]
                 if isinstance(G[u, v], float):
-                    R[u, v] = caps[u, v] - ff[(u, v)]
+                    R[u, v] = R[u, v] - ff[(u, v)]
                 elif isinstance(G[v, u], float):
-                    R[u, v] = ff[(v, u)] - floors[v, u]
+                    R[u, v] = ff[(v, u)] - R[v, u]
                 else:
                     R[u, v] = 0
                 v = padre[v]
