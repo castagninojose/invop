@@ -48,7 +48,7 @@ def steiner_trees(R, w_m):
     """
     Genera las aristas que debemos agregar para armar un arbol de steiner.
     Args:
-        R : list contiene a los vertices protegidos
+        R : list contiene a los vertices "protegidos"
         w_m : numpy.array de dos dimensiones con los pesos originales de las aristas
     Returns:
         dict con {(u, v) : weight(u, v)}
