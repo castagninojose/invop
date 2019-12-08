@@ -9,7 +9,7 @@ usando Bellman-Ford para encontrar ciclos negativos en la matriz `-log(G)`. Si n
 
 ### Ejercicio 3:
 
-El algoritmo de Steiner. [Graphs, Networks and algorithms](https://doc.lagout.org/science/0_Computer%20Science/2_Algorithms/Graphs%2C%20Networks%20and%20Algorithms%20%284th%20ed.%29%20%5BJungnickel%202012-11-09%5D.pdf)
+Implementación del algoritmo de arboles de Steiner que aparece en [Graphs, Networks and algorithms](https://doc.lagout.org/science/0_Computer%20Science/2_Algorithms/Graphs%2C%20Networks%20and%20Algorithms%20%284th%20ed.%29%20%5BJungnickel%202012-11-09%5D.pdf)
 
 ### Ejercicio 4:
     
@@ -23,4 +23,5 @@ Luego para cada arista `(u, v)` en `G` seteamos las capacidades `c'` asi:
 * Una arista `(s', v)` con capacidad igual al piso de `(u, v)`
 * Una arista `(u, t')` con capacidad igual al piso de `(u, v)`
 
-[Ref](https://pdfs.semanticscholar.org/03a2/785783f43202925da70ae842eeda9cebd77e.pdf)
+De esta manera podemos encontrar un flujo factible en `G` buscando un flujo máximo en `G'` que luego podemos ir aumentando usando `ford_fulkerson`
+Para una descripción mas detallada del procedimiento ir [aquí](https://pdfs.semanticscholar.org/03a2/785783f43202925da70ae842eeda9cebd77e.pdf)
