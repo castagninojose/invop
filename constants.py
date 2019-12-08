@@ -100,4 +100,4 @@ FF_TESTING_M = np.array(  # para testear FF
     [np.inf, np.inf, 9, np.inf, np.inf, 20], 
     [np.inf, np.inf, np.inf, 7, np.inf, 4], 
     [np.inf, np.inf, np.inf, np.inf, np.inf, np.inf]]
-    ) 
+)

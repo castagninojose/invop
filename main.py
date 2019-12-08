@@ -11,7 +11,7 @@ from utils import (
     matrix_from_edges_d,
     edges_dict_from_m,
     path_from_predecessor_matrix
-    )
+)
 
 from constants import (
     WEIGHT_MATRIX_1,
@@ -22,7 +22,7 @@ from constants import (
     DEMAND_MATRIX_1,
     PAISES_DICT,
     EJ_4_21_CURRENCY_M
-    )
+)
 
 def monet_arbit(G):
     """
@@ -40,17 +40,18 @@ def monet_arbit(G):
             continue
         else:
             # devolver los caminos menos costosos
-            print(bf[1], bf[2])
+            for k in range(n):
+                print(f"Camino suboptimo: {path_from_predecessor_matrix(bf[2], i, k)}")
 
 
 def steiner_trees(R, w_m):
     """
-    Genera arboles de steiner. Para el ej 3.
+    Genera las aristas que debemos agregar para armar un arbol de steiner.
     Args:
         R : list contiene a los vertices protegidos
         w_m : numpy.array de dos dimensiones con los pesos originales de las aristas
     Returns:
-        Un dict con arista : peso como keys y values
+        dict con {(u, v) : weight(u, v)}
     """
     d, p = floyd_warshall(w_m)
     W = np.inf
@@ -89,19 +90,23 @@ def max_flow_with_demands(cap_m=CAPACITY_MATRIX, dem_m=DEMAND_MATRIX):
     """
     n = len(cap_m)
     rv_m = cap_m - dem_m
-    rv_m[n-1,0] = 9991
+    rv_m[n-1,0] = 9991  # python no me quiere dejar asignarle np.inf
     s = []
     t = [np.nan]
     for i in range(n):  # para cada vertice v
         t.append(dem_m[i][~np.isnan(dem_m[i])].sum())
         s.append(dem_m[:,i][~np.isnan(dem_m[:,i])].sum())
+
+    breakpoint()
     
     rv_m = np.r_[[s], rv_m]
     rv_m = np.c_[rv_m, np.array(t)]
     vacios_1 = np.empty((1, n+1))*np.nan
     vacios_2 = np.empty((n+2, 1))*np.nan
-    rv_m = np.r_[rv_m, vacios_1]
-    rv_m = np.c_[vacios_2, rv_m]
+    rv_m = np.r_[rv_m, vacios_1]  # agrega fila vacia al final
+    rv_m = np.c_[vacios_2, rv_m]  # agrega columna vacia al final
+
+    breakpoint()
 
     f1, flujo_factible_d, vvv = ford_fulkerson(rv_m, 0, n+1)
 
@@ -111,11 +116,12 @@ def max_flow_with_demands(cap_m=CAPACITY_MATRIX, dem_m=DEMAND_MATRIX):
     matriz_aux = np.delete(matriz_aux, [0, n+1], 1)
     matriz_aux[n-1, 0] = 0
     matriz_aux[0, n-1] = 0
+
+    breakpoint()
     
     f2, aver_flujo, puff = ford_fulkerson(
-        matriz_aux, 0, n-1, modificado=True, caps=CAPACITY_MATRIX, floors=DEMAND_MATRIX
-        )
-    breakpoint()
+        matriz_aux, 0, n-1, modificado=True, caps=CAPACITY_MATRIX, floors=DEMAND_MATRIX,
+    )
     
     return f2, aver_flujo
 
@@ -142,7 +148,7 @@ if __name__ == "__main__":
         print(steiner_trees([1, 2, 4, 6], WEIGHT_MATRIX_1))
 
     elif args.ejercicio_4:
-        print(max_flow_with_demands(cap_m=CAPACITY_MATRIX_1, dem_m=DEMAND_MATRIX_1))
+        print(max_flow_with_demands(cap_m=CAPACITY_MATRIX, dem_m=DEMAND_MATRIX))
     
     else:
         print(f"Elegir el ejercicio a resolver. Puede ver las opciones en main.py -h")

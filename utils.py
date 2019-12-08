@@ -166,7 +166,6 @@ def bellman_ford(G, source):
         u, v = e[0], e[1]
         if (dist_l[v] != float('Inf') and dist_l[v] > dist_l[u]):
             print(f"Existe ciclo negativo entre {PAISES_DICT[source]} y {PAISES_DICT[v]}")
-            # breakpoint()
             camino = path_from_predecessor(predecessor, source, v)
             print(f"Camino: {camino}")
             return True, dist_l, predecessor
@@ -231,7 +230,7 @@ def ford_fulkerson(G, source, sink, modificado=False, caps=None, floors=None):
         - G : np.array
         - source : int
         - sink : int
-        - (opcional) modificado : boolean para ejecutar la version modificada necesaria para la ultima parte del ej 4.
+        - (opcional) modificado : boolean para ejecutar la version modificada para la ultima parte del ej 4.
         - (opcional) caps : np.array con las capacidades de las aristas
         - (opcional) floors : np.array con las demandas de las aristas.
     """
@@ -260,12 +259,13 @@ def ford_fulkerson(G, source, sink, modificado=False, caps=None, floors=None):
         # actualizo capacidades residuales
         v = sink
         while(v != source):
+            u = padre[v]
             if modificado:
-                u = padre[v]
-                if isinstance(G[u, v], float):
-                    R[u, v] = caps[u, v] - G[u, v]
-                if isinstance(G[v, u], float):
-                    R[u, v] = G[v, u] - floors[v, u]
+                # version modificada de actualizar las capacidades residuales
+                if (G[u, v] > 0):
+                    R[u, v] = caps[u, v] - flujo_camino
+                elif (G[u, v] > 0):
+                    R[u, v] = flujo_camino - floors[v, u]
                 else:
                     R[u, v] = 0
                 v = padre[v]
@@ -275,21 +275,7 @@ def ford_fulkerson(G, source, sink, modificado=False, caps=None, floors=None):
                 R[v][u] += flujo_camino
                 v = padre[v]
 
-    return rv, edges_dict_from_m(R), R
+    return rv, edges_dict_from_m(G-R), R
 
 if __name__ == "__main__":
-    # print(ford_fulkerson(FF_TESTING_M, 0, 5))
-    slacks = CAPACITY_MATRIX - DEMAND_MATRIX
-    floors = edges_dict_from_m(DEMAND_MATRIX)
-    caps = edges_dict_from_m(CAPACITY_MATRIX)
-    n = CAPACITY_MATRIX.shape[0]
-    nuevo_g = {}
-    for arista, w in floors.items():
-        u, v = arista[0], arista[1]
-        if (u, v) in nuevo_g.keys():
-            nuevo_g.update({(u, v) : nuevo_g[u, v] + w})
-        nuevo_g.update({(u, v) : slacks[u, v]})
-        nuevo_g.update({(n, v) : w})
-        nuevo_g.update({(u, n+1) : w})
-    
-    print(matrix_from_edges_d(nuevo_g))
+    print(ford_fulkerson(FF_TESTING_M, 0, 5))

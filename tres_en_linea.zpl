@@ -63,7 +63,8 @@ var lineas_n[I] binary; # 1 si la linea i esta toda con negras
 
 subto cant_negras: sum <j> in J : negras[j]==14; # la cantidad de negras tiene que ser 14
 
-# ahora fuerzo a `lineas_b` y `lineas_n` a ser 1 si hay una linea formada y 0 si no. 
+# ahora fuerzo a `lineas_b` y `lineas_n` a ser 1 si hay una linea formada y 0 si no.
+# tuve que modificar levemente las restricciones porque zimpl no me dejaba usar menores o mayores estrictos.
 subto c1: forall <i> in I : sum<j> in J : matriz_id_lineas[i,j] * negras[j] <= (2.9 + 100*lineas_n[i]);
 subto c2: forall <i> in I : sum<j> in J : matriz_id_lineas[i,j] * negras[j] >= 3 - 100*(1 - lineas_n[i]);
 subto c3: forall <i> in I : sum<j> in J : matriz_id_lineas[i,j] * (1 - negras[j]) <= (2.9 - 100*lineas_b[i]);
