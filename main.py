@@ -34,7 +34,7 @@ def monet_arbit(G):
     n = len(G)
     for i in range(n):
         print(f"Moneda: {PAISES_DICT[i]}")
-        bf = bellman_ford(G, i)
+        bf = bellman_ford(-np.log(G), i)
         if bf[0] == True: # ciclo negativo
             # aca bellman-ford imprime el camino del ciclo negativo
             continue
@@ -104,7 +104,7 @@ def max_flow_with_demands(cap_m=CAPACITY_MATRIX, dem_m=DEMAND_MATRIX):
     rv_m = np.r_[rv_m, vacios_1]  # agrega fila vacia al final
     rv_m = np.c_[vacios_2, rv_m]  # agrega columna vacia al final
 
-    f1, flujo_factible_d, vvv = ford_fulkerson(rv_m, 0, n+1)
+    f1, flujo_factible_d, _ = ford_fulkerson(rv_m, 0, n+1)
 
     matriz_aux = matrix_from_edges_d(flujo_factible_d)
     
@@ -136,7 +136,7 @@ if __name__ == "__main__":
 
 
     if args.ejercicio_2:
-        monet_arbit(-np.log(EJ_4_21_CURRENCY_M))
+        monet_arbit(EJ_4_21_CURRENCY_M)
 
     elif args.ejercicio_3:
         print(steiner_trees([1, 2, 4, 6], WEIGHT_MATRIX_1))

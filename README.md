@@ -2,6 +2,10 @@
 
 `python main.py -<e>` eligiendo alguno de los ejercicios 2, 3 o 4.
 
+En el modulo `constants.py` hay varias matrices que se pueden usar para distintos ejercicios.
+Se puede agregar o editar algunas ahi para probar distintos ejemplos, actualizando los parametros 
+en la parte final de `main.py`.
+
 ### Ejercicio 2:
 
 Arbitraje monetario. Dada `G` una matriz asimétrica de cambios entre las monedas de 11 paises, busca oportunidades de arbitraje

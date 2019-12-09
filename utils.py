@@ -267,9 +267,9 @@ def ford_fulkerson(G, source, sink, modificado=False, flujo_factible=None):
                 # version modificada de actualizar las capacidades residuales
                 u = padre[v]
                 if isinstance(G[u, v], float):
-                    R[u, v] = R[u, v] - flujo_factible[(u, v)]
+                    R[u, v] = R[u, v] - flujos_residual[(u, v)]
                 elif isinstance(G[v, u], float):
-                    R[u, v] = flujo_factible[(v, u)] - R[v, u]
+                    R[u, v] = flujos_residual[(v, u)] - R[v, u]
                 else:
                     R[u, v] = 0
                 v = padre[v]
