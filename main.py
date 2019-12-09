@@ -96,7 +96,7 @@ def max_flow_with_demands(cap_m=CAPACITY_MATRIX, dem_m=DEMAND_MATRIX):
     for i in range(n):  # para cada vertice v
         t.append(dem_m[i][~np.isnan(dem_m[i])].sum())
         s.append(dem_m[:,i][~np.isnan(dem_m[:,i])].sum())
-    
+
     rv_m = np.r_[[s], rv_m]
     rv_m = np.c_[rv_m, np.array(t)]
     vacios_1 = np.empty((1, n+1))*np.nan
@@ -112,7 +112,7 @@ def max_flow_with_demands(cap_m=CAPACITY_MATRIX, dem_m=DEMAND_MATRIX):
     matriz_aux = np.delete(matriz_aux, [0, n+1], 1)
     matriz_aux[n-1, 0] = 0
     matriz_aux[0, n-1] = 0
-    
+
     f2, aver_flujo, puff = ford_fulkerson(
         matriz_aux, 0, n-1, modificado=True, flujo_factible=flujo_factible_d
     )
@@ -121,7 +121,7 @@ def max_flow_with_demands(cap_m=CAPACITY_MATRIX, dem_m=DEMAND_MATRIX):
 
 
 if __name__ == "__main__":
-    
+
     parser = argparse.ArgumentParser(
             description="Rutinas de los ejercicios 2, 3 y 4."
         )
@@ -143,6 +143,6 @@ if __name__ == "__main__":
 
     elif args.ejercicio_4:
         print(max_flow_with_demands(cap_m=CAPACITY_MATRIX, dem_m=DEMAND_MATRIX))
-    
+
     else:
         print(f"Elegir el ejercicio a resolver. Puede ver las opciones en main.py -h")
