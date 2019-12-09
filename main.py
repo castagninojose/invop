@@ -30,6 +30,8 @@ def monet_arbit(G):
     Args:
         G : numpy.array de dos dimensiones (matriz) con los precios de las monedas. `G[i,j]` es
             la cantidad de moneda `j` que se puede comprar con una unidad de moneda `i`.
+    Para cada moneda, busca un ciclo negativo (i.e.) una oportunidad. Si no encuentra devuelve
+    el camino de menor peso.
     """
     n = len(G)
     for i in range(n):
