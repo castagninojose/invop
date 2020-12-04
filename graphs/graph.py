@@ -1,41 +1,76 @@
-"""Graph class.
-posible inputs:
-    [ x ] dict of sets,
-    [ ] np.ndarray / np.matrix,
-    [ ] sp.sparse,
-    [ ] dict of dicts,
-    [ ] dict of lists
-
-"""
-from collections import defaultdict
-
+"""Graph class."""
 
 class Graph:
+    def __init__(self):  # Crea un grafo vacio
+        self.adj_dict = {}
+        self.vertices = set()
 
-    def __init__(self, edges, directed=False):
-        self._dict = defaultdict(set)
-        self._directed = directed
-        self.add_edges(edges)
+    def add_vertex(self, vertex):
+        self.vertices.add(vertex)
 
-    def add_edges(self, edges):
-        for n1, n2 in edges:
-            self.add(n1, n2)
+    def get_size(self):
+        return len(self.vertices)
 
-    def add(self, node_1, node_2):
-        self._dict[self.size].update({node_1, node_2})
+    def weighted_neighbors(self, vertex):
+        if vertex not in self.adj_dict:
+            return set()
+        else:
+            return self.adj_dict[vertex]
 
-    @property
-    def nodes(self):
-        return set.union(*self._dict.values())
-    
-    @property
-    def size(self):
-        return len(self._dict.keys())
+    def neighbors(self, vertex):
+        if vertex not in self.adj_dict:
+            return set()
+        else:
+            return {u[0] for u in self.adj_dict[vertex]}
+
+    def add_edge(self, edge):  # edge = (u,v,peso) dirigida
+        weight = 1
+        if len(edge) == 3:
+            source, target, weight = edge
+        elif len(edge) == 2:
+            source, target = edge
+        else:
+            print("Uso invalido. Ingresar [source,target,weight]")
+        self.vertices.add(source)
+        self.vertices.add(target)
+        if source not in self.adj_dict:
+            self.adj_dict[source] = set()
+        self.adj_dict[source].add((target, weight))
+
+    def add_edges_list(self, edges_list):
+        for edge in edges_list:
+            self.add_edge(edge)
 
 
-if __name__ == '__main__':
-    g = Graph([[1, 2], [2, 3], [1, 3], [3, 4]])
-    g.add('puff', 1)
-    print(g._dict)
-    print(g.size)
-    print(g.nodes)
+if __name__ == "__main__":
+    g = Graph()
+    breakpoint()
+
+
+
+# from collections import defaultdict
+
+
+# class Graph:
+#     def __init__(self, edges, directed=False):
+#         self._dict = defaultdict(set)
+#         self._directed = directed
+#         self.add_edges(edges)
+
+#     def add_edges(self, edges):
+#         for n1, n2 in edges:
+#             self.add(n1, n2)
+
+#     def add(self, node_1, node_2):
+#         if {node_1, node_2} in self._dict.values():
+#             pass
+#         else:
+#             self._dict[self.size].update({node_1, node_2})
+
+#     @property
+#     def nodes(self):
+#         return set.union(*self._dict.values())
+
+#     @property
+#     def size(self):
+#         return len(self._dict.keys())
