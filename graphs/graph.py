@@ -30,7 +30,7 @@ class Graph:
         elif len(edge) == 2:
             source, target = edge
         else:
-            print("Uso invalido. Ingresar [source,target,weight]")
+            print("Invalid use. Edges should be [source, target, weight]")
         self.vertices.add(source)
         self.vertices.add(target)
         if source not in self.adj_dict:
@@ -40,6 +40,24 @@ class Graph:
     def add_edges_list(self, edges_list):
         for edge in edges_list:
             self.add_edge(edge)
+
+    def bfs_search(self, root):
+        current_queue = [root]
+        next_queue = []
+        visited = [False] * self.get_size()
+        visited[root] = True
+        while current_queue:
+            node = current_queue.pop(0)
+            for n in self.neighbors(node):
+                if not visited[n]:
+                    next_queue.append(n)
+                    visited[n] = True
+
+            current_queue = next_queue
+            next_queue = []
+        return visited
+
+
 
 
 if __name__ == "__main__":
