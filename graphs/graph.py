@@ -1,4 +1,6 @@
 """Graph class."""
+import numpy as np
+
 
 class Graph:
     def __init__(self):  # Crea un grafo vacio
@@ -42,28 +44,45 @@ class Graph:
             self.add_edge(edge)
 
     def bfs_search(self, root):
-        current_queue = [root]
-        next_queue = []
+        queue = [root]
         visited = [False] * self.get_size()
         visited[root] = True
-        while current_queue:
-            node = current_queue.pop(0)
+        while queue:
+            node = queue.pop(0)
             for n in self.neighbors(node):
                 if not visited[n]:
-                    next_queue.append(n)
+                    queue.append(n)
                     visited[n] = True
 
-            current_queue = next_queue
-            next_queue = []
-        return visited
-
-
+    def dijkstra(self, root):
+        print(root)
+        queue = [root]
+        visited = [False] * self.get_size()
+        distances = [np.inf] * self.get_size()
+        distances[root] = 0
+        paths = {n: [0] for n in self.adj_dict.keys()}
+        while queue:
+            aux = np.array(distances)
+            aux[visited] = np.inf
+            node = np.argmin(aux)
+            queue.remove(node)
+            visited[node] = True
+            for neighbor in self.neighbors(node):
+                if not visited[neighbor]:
+                    if neighbor not in queue:
+                        queue.append(neighbor)
+                    neighbor_distance = dict(self.adj_dict[node])[neighbor]
+                    if distances[neighbor] > distances[node] + neighbor_distance:
+                        distances[neighbor] = distances[node] + neighbor_distance
+                        paths[neighbor] = paths[node] + [neighbor]
+        distances[node] = (
+            distances[paths[node][-2]] + dict(self.adj_dict[paths[node][-2]])[node]
+        )
+        return paths, np.exp(-np.array(distances))
 
 
 if __name__ == "__main__":
     g = Graph()
-    breakpoint()
-
 
 
 # from collections import defaultdict
