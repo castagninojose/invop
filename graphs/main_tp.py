@@ -1,8 +1,9 @@
 """Trabajo Práctico Investigación Operativa 2020."""
-import pickle
-import logging
 import argparse
+import logging
+import pickle
 from datetime import datetime
+
 start_runtime = datetime.now()
 
 logging.basicConfig(level=logging.DEBUG)
@@ -11,7 +12,6 @@ import numpy as np
 
 from constants import DEFAULT_GRAPH, MICROAPPLE_GRAPH
 from graph import Graph
-
 
 
 def find_safest_paths(inputs=DEFAULT_GRAPH, source=0):
