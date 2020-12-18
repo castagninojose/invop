@@ -87,6 +87,7 @@ class Graph:
                     if distances[neighbor] > distances[node] + neighbor_distance:
                         distances[neighbor] = distances[node] + neighbor_distance
                         paths[neighbor] = paths[node] + [neighbor]
+        #  add distance to last visited node
         distances[node] = (
             distances[paths[node][-2]] + dict(self.adj_dict[paths[node][-2]])[node]
         )
