@@ -32,7 +32,7 @@ class Graph:
         elif len(edge) == 2:
             source, target = edge
         else:
-            print("Invalid use. Edges should be [source, target, weight]")
+            raise ValueError("Invalid use. Edges should be [source, target, weight]")
         self.vertices.add(source)
         self.vertices.add(target)
         if source not in self.adj_dict:
@@ -55,7 +55,19 @@ class Graph:
                     visited[n] = True
 
     def dijkstra(self, root):
-        print(root)
+        """
+        Modified version of Dijkstra algorithm to include all distances.
+
+        Parameters
+        ----------
+        root : int
+            Source node.
+
+        Returns
+        -------
+        List with paths and distances.
+
+        """
         queue = [root]
         visited = [False] * self.get_size()
         distances = [np.inf] * self.get_size()
@@ -78,36 +90,8 @@ class Graph:
         distances[node] = (
             distances[paths[node][-2]] + dict(self.adj_dict[paths[node][-2]])[node]
         )
-        return paths, np.exp(-np.array(distances))
+        return [paths, np.exp(-np.array(distances))]
 
 
 if __name__ == "__main__":
     g = Graph()
-
-
-# from collections import defaultdict
-
-
-# class Graph:
-#     def __init__(self, edges, directed=False):
-#         self._dict = defaultdict(set)
-#         self._directed = directed
-#         self.add_edges(edges)
-
-#     def add_edges(self, edges):
-#         for n1, n2 in edges:
-#             self.add(n1, n2)
-
-#     def add(self, node_1, node_2):
-#         if {node_1, node_2} in self._dict.values():
-#             pass
-#         else:
-#             self._dict[self.size].update({node_1, node_2})
-
-#     @property
-#     def nodes(self):
-#         return set.union(*self._dict.values())
-
-#     @property
-#     def size(self):
-#         return len(self._dict.keys())

@@ -1,36 +1,48 @@
-"""Main."""
+"""Trabajo Práctico Investigación Operativa 2020."""
 import pickle
+import logging
+import argparse
+from datetime import datetime
+start_runtime = datetime.now()
+
+logging.basicConfig(level=logging.DEBUG)
 
 import numpy as np
 
-from constants import DEFAULT_GRAPH
+from constants import DEFAULT_GRAPH, MICROAPPLE_GRAPH
 from graph import Graph
 
 
-def dijkstra(graph, source):
-
-    queue = list(graph.vertices)
-    dist = []
-    prev = []
-    visited = []
-
 
 def find_safest_paths(inputs=DEFAULT_GRAPH, source=0):
+    """
+    Creates a Graph instance with `inputs` and uses a version of Dijkstra
+    to find the safest paths between `source` and all other nodes.
+
+    Parameters
+    ----------
+    inputs : list of tuples
+        All edges and their corresponding weights.
+    source : int
+        Source node from which packages will be sent.
+
+    Returns
+    -------
+    List with paths to each node and distance.
+
+    """
     log_inputs = [
-        # (a[1], a[2], 0) if a[2] == 1 else (a[0], a[1], -np.log(a[2]))
         (a[0], a[1], -np.log(a[2]))
         for a in inputs
     ]
-    graph = Graph()
     log_graph = Graph()
-    graph.add_edges_list(inputs)
     log_graph.add_edges_list(log_inputs)
     return log_graph.dijkstra(source)
 
 
 if __name__ == "__main__":
-
-    with open('/home/puff/git-repos/invop/graphs/data/microapple.input', 'rb') as f:
-        datos_red = pickle.load(f)
-        g = find_safest_paths(inputs=datos_red)
-        print(g)
+    logging.info("Finding safest paths...")
+    paths, distance = find_safest_paths(inputs=MICROAPPLE_GRAPH)
+    for key in paths.keys():
+        print(key, paths[key], distance[key])
+    logging.info(f"Computation took: {datetime.now() - start_runtime}")
