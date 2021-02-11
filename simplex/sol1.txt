@@ -1,0 +1,13 @@
+solution status: optimal solution found
+objective value:                               674830
+price_bin_by_company#1#13                           1 	(obj:0)
+price_bin_by_company#2#1                            1 	(obj:0)
+price_bin_by_company#3#1                            1 	(obj:0)
+price_bin_by_company#4#1                            1 	(obj:0)
+schools_by_company_qty#2#1                        287 	(obj:0)
+schools_by_company_qty#3#1                         77 	(obj:0)
+schools_by_company_qty#4#1                         22 	(obj:0)
+schools_by_company_qty#5#1                        105 	(obj:0)
+schools_by_company_qty#6#1                         61 	(obj:0)
+schools_by_company_qty#1#1                        248 	(obj:0)
+company_schools_by_bin#1#13                       800 	(obj:843.5375)
