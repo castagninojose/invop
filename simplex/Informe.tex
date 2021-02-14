@@ -1,0 +1,253 @@
+	\documentclass[12pt]{article}
+\usepackage{graphicx,amsmath,amsfonts,amssymb,epsfig,euscript}
+%\usepackage[T1]{fontenc}
+%\usepackage[utf8]{inputenc}
+%\usepackage[utf8x]{inputenc}
+
+\usepackage{float}
+
+\usepackage[spanish]{babel}
+
+\usepackage{bbold} % Para que escriba bien el vector todo de 1's.
+
+\selectlanguage{spanish}
+
+\graphicspath{ {images/} }
+
+\usepackage{fancyhdr} % Para modificar los encabezados y pies de pÃ¡gina
+%%%%% SUGERENCIA DE HEADER Y FOOT
+%\pagestyle{fancy}
+%\fancyhf{}
+%\rhead{Share\LaTeX}
+
+\graphicspath{ {images/} }
+
+
+\newtheorem{ejer}{Ejercicio}
+\newcommand{\bej}{\begin{ejer}\rm}
+\newcommand{\fej}{\end{ejer}}
+
+
+\def \R{\ensuremath{\mathbb{R}}}
+
+\topmargin-2cm \vsize 29.5cm \hsize 21cm
+\setlength{\textwidth}{16.75cm}\setlength{\textheight}{23.5cm}
+\setlength{\oddsidemargin}{0.0cm}
+\setlength{\evensidemargin}{0.0cm}
+
+\begin{document}
+ \centerline{{\small Universidad de Buenos Aires - Facultad de Ciencias Exactas y Naturales - Depto. de Matem\'atica}}
+ 
+ \vskip 0.2cm
+ \hrulefill
+ \vskip 0.2cm
+
+ \centerline{{\bf\Huge {\sc Informe TP final}}}
+ \vskip 0.2cm
+ \centerline{\ttfamily Julio Padra 903/10 y Castagnino Jos\'e 553/10}
+ \hrulefill
+
+
+ \bigskip
+ 
+ 
+\begin{center}
+  \hrulefill
+
+ \end{center}
+\section{Introducción:}
+Para realizar nustro trabajo práctico final elegimos el paper \textit{``An Asymmetric Multi-Item Auction with Quantity Discounts Applied to Internet Service Procurement in Buenos Aires Public Schools"} que vimos contado en la presentación \textit{``Mathematical programming in an auction to provide Internet connections in Buenos Aires City schools"} utilizando el modelo polinomial allí propuesto e implementamos varias instancias de prueba armadas artificialmente de manera que tengan resultados variados. Para hallar los óptimos utilizamos el software SCIP mientras que para los casos donde alguna unidad de competencia se reparte entre más de una firma implementamos una heurística en Python para decidir el reparto. 
+
+\bigskip
+En la sección 2 describimos las distintas instancias implementadas y en la sección 3 repasamos los resultados obtenidos.
+    
+\bigskip
+ \section{Instancias:}
+ 
+    En total son 4 ejemplos. En la \textbf{instancia 1} modificamos el ejemplo presentado en clase de manera que tenga al menos dos soluciones. El cuadro de tarifas para esta instancia quedó del siguiente modo:
+
+\bigskip
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{||c|| c | c | c | c||}  
+ \hline
+     tramo & compañía 1 & compañía 2 & compañía 3 & compañía 4 \\ [0.5ex] 
+ \hline\hline
+ 0-20 & \$4096 & \$2662 & \$1991 & \$1605 \\ 
+ 20-40 & \$4096 & \$2184 & \$1991 & \$1521 \\
+ 40-60 & \$4096 & \$1916 & \$1991 & \$1352 \\
+ 60-80 & \$4096 & \$1810 & \$1075 & \$1267 \\
+ 80-100 & \$4096 & \$1597 & \$890 & \$1132 \\
+ 100-150 & \$4227 & \$1331 & \-- & \$1132 \\
+ 150-200 & \$3992 & \$1091 & \-- & \-- \\
+ 200-300 & \$3757 & \$1038 & \-- & \-- \\
+ 300-400 & \$3287 & \$785 & \-- & \-- \\
+ 400-500 & \$2818 & \$785 & \-- & \-- \\
+ 500-600 & \$2348 & \$785 & \-- & \-- \\
+ 600-700 & \$1878 & \-- & \-- & \-- \\
+ 700-800 & \$843.5375 & \-- & \-- & \-- \\ [1ex] 
+ \hline
+\end{tabular}
+\caption{Instancia 1}
+\label{table:1}
+\end{table}
+
+\\
+En la \textbf{instancia 2} sacamos la primer solución de la instancia anterior y vimos que se alcanzaba el mismo valor de la función objetivo pero con otro minimizador.
+\\
+En la \textbf{instancia 3} sacamos la solución del primero y el segundo viendo que se alcanzaba un óptimo más alto pero de manera tal que más de una empresa participara en la misma unidad de competencia. Aprovechamos dicha instancia para correr nuestro algoritmo de asignación al interior de la misma Unidad de Competencia.
+\\
+Finalmente, en la \textbf{instancia 4} armamos un ejemplo sustancialmente distinto (ver cuadro 2) en el cual las empresas comparten unidades de competencia sin la necesidad de remover óptimos. En este caso, también utilizamos la heurística presentada en el paper para repartir escuelas dentro de una misma unidad de competencia. Para más detalles sobre la implementación, se puede ver \texttt{unidades\_compartidas.py}.
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{||c|| c | c | c | c | c ||} 
+ \hline
+     tramo & compañía 1 & compañía 2 & compañía 3 & compañía 4 & compañía 5 \\ [0.5ex] 
+ \hline\hline
+ 0-20 & \$2996 & \$2182 & \$1991 & \$1605 & \$1600 \\ 
+ 20-40 & \$2996 & \$2182 & \$1991 & \$1521 & \$1600 \\
+ 40-60 & \$2996 & \$1916 & \$1491 & \$1452 & \$1500 \\
+ 60-80 & \$2996 & \$1810 & \$1375 & \$1367 & \$1400 \\
+ 80-100 & \$2896 & \$1597 & \$1190 & \$1232 & \$1300 \\
+ 100-150 & \$2427 & \$1331 & \$990 & \$1232 & \$1200 \\
+ 150-200 & \$2112 & \$1091 & \$890 & \$1131 & \$1150 \\
+ 200-300 & \$1957 & \$1038 & \$850 & \$1132 & \$1100 \\
+ 300-400 & \$1287 & \$785 & -- & \$999 & \$990 \\
+ 400-500 & \$1000 & -- & -- & \$949 & \$960 \\
+ 500-600 & \$900 & -- & -- & \$899 & \$899 \\
+ 600-700 & \$800 & -- & -- & \$849 & \$799 \\
+ 700-800 & -- & -- & -- & -- & \$749 \\
+ 800-900 & -- & -- & -- & -- & -- \\
+ 900-1000 & -- & -- & -- & -- & -- \\ [1ex] 
+ \hline
+\end{tabular}
+\caption{Instancia 4}
+\label{table:1}
+\end{table}
+\bigskip
+\bigskip
+  \section{Resultados:}
+Luego de correr nuestro programa con la  \textbf{instancia 1} obtuvimos que la compañía 1 se adjudicó todas las escuelas, como podemos ver expresado en Cuadro 3 que indica la cantidad de escuelas asignadas a cada compañía en cada región. En este caso el valor óptimo alcanzado por la función objetivo fue \$$674830$. Ver Cuadro 3.
+  
+\begin{table}[h!]
+\centering
+\begin{tabular}{||c|| c | c | c | c||} 
+ \hline
+     región & compañía 1 & compañía 2 & compañía 3 & compañía 4 \\ [0.5ex] 
+ \hline\hline
+ 1 & 248 & 0 & 0 & 0 \\ 
+ 2 & 2184 & 0 & 0 & 0 \\
+ 3 & 77 & 0 & 0 & 0 \\
+ 4 & 22 & 0 & 0 & 0 \\
+ 5 & 105 & 0 & 0 & 0 \\
+ 6 & 61 & 0 & 0 & 0 \\
+ [1ex] 
+ \hline
+\end{tabular}
+\caption{Asignaciones instancia 1}
+\label{table:1}
+\end{table}
+
+En cambio en la \textbf{instancia 2} sin la solución de la primera, a la compañía 1 no se le asignó ninguna escuela ya que todas fueron repartidas entre las demás. Obteniendo el mismo valor óptimo alcanzado por la función objetivo de \$$674830$ con lo cuál estamos ante el caso de óptimos alternativos.
+
+\bigskip
+En la \textbf{instancia 3} sin la solución de las instancias uno y dos, nos dió un óptimo más alto con lo cuál ya no hablamos de un caso de óptimo múltiple, sin embargo aprovechamos para utilizar nuestro algoritmo que recorre de Oeste a Este asignando qué escuela va para cada empresa en los casos que las Unidades de competencia se encuentran repartidas. Para ésto asumimos que las regiónes vienen numeradas de Oeste a Este.
+\\Ver cuadro 3.
+En el caso de la textbf{instancia 3}, todas las unidades se reparten entre más de una compañía, del siguiente modo:
+
+\textit{En la unidad 1 se asignan a la empresa 1 las 247 escuelas del oeste.\\
+En la unidad 2 se asignan a la empresa 1 las 286 escuelas del este. En la unidad 3 es indistinto qué escuelas se asignen al este y cuales al oeste, ya que la misma está en ambas unidades.\\
+En la unidad 4 se asignan a la empresa 1 las 21 escuelas del este. En la unidad 5 es indistinto qué escuelas se asignen al este y cuales al oeste, ya que la misma está en ambas unidades.\\
+Finalmente, en la unidad 6 se asignan a la empresa 1 las 60 escuelas del este.`}
+
+
+\\
+
+En la \textbf{instancia 4} obtuvimos un óptimo en el cuál más de una empresa participe en la misma Unidad de Competencia sin la necesidad de remover otros resultados previamente. 
+\\Ver Cuadro 4.
+En este caso, corriendo nuestro algoritmo que recorre de Oeste a Este asignando qué escuela va para cada empresa, las unidades compartidas se reparten del siguiente modo:
+
+\textit{Las unidades 4 y 7 fueron repartidas entre más de una compañía. En la unidad 4 se asignan a la empresa 3 las 23 escuelas del este.\\
+En la unidad 7 se asignan a la empresa 4 las 119 escuelas del este.}
+\subsection{Tiempos de corrida:}
+
+\begin{itemize}
+    \item Instancia 1: 0.17
+    \item Instancia 2: 0.97
+    \item Instancia 3: 0.64
+    \item Instancia 4: 1.38
+\end{itemize}
+
+
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{||c|| c | c | c | c||} 
+ \hline
+     región & compañía 1 & compañía 2 & compañía 3 & compañía 4 \\ [0.5ex] 
+ \hline\hline
+ 1 & 0 & 248 & 0 & 0 \\ 
+ 2 & 0 & 287 & 0 & 0 \\
+ 3 & 0 & 0 & 77 & 0 \\
+ 4 & 0 & 0 & 22 & 0 \\
+ 5 & 0 & 0 & 0 & 105 \\
+ 6 & 0 & 61 & 0 & 0 \\
+ [1ex] 
+ \hline
+\end{tabular}
+\caption{Asignaciones instancia 2}
+\label{table:1}
+\end{table}
+
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{||c|| c | c | c | c||} 
+ \hline
+     región & compañía 1 & compañía 2 & compañía 3 & compañía 4 \\ [0.5ex] 
+ \hline\hline
+ 1 & 247 & 1 & 0 & 0 \\ 
+ 2 & 286 & 1 & 0 & 0 \\
+ 3 & 76 & 0 & 1 & 0 \\
+ 4 & 21 & 0 & 0 & 1 \\
+ 5 & 104  & 0 & 0 & 1 \\
+ 6 & 60 & 0 & 0 & 1 \\
+ [1ex] 
+ \hline
+\end{tabular}
+\caption{Asignaciones instancia 3}
+\label{table:1}
+\end{table}
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{|| c || c | c | c | c | c ||} 
+ \hline
+     región & compañía 1 & compañía 2 & compañía 3 & compañía 4 & compañía 5 \\ [0.5ex] 
+ \hline\hline
+ 1 & 0 & 10 & 0 & 0 & 0 \\ 
+ 2 & 0 & 287 & 0 & 0 & 0 \\
+ 3 & 0 & 0 & 77 & 0 & 0 \\
+ 4 & 0 & 0 & 23 & 255 & 0 \\
+ 5 & 0  & 0 & 0 & 195 & 0 \\
+ 6 & 0 & 0 & 0 & 61 & 0 \\
+ 7 & 0 & 3 & 0 & 119 & 0 \\
+ [1ex] 
+ \hline
+\end{tabular}
+\caption{Asignaciones instancia 4}
+\label{table:1}
+\end{table}
+
+\bigskip
+\bigskip
+
+
+
+\bigskip
+\bigskip
+ \end{document}
+
+
