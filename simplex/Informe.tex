@@ -5,6 +5,8 @@
 %\usepackage[utf8x]{inputenc}
 
 \usepackage{float}
+\usepackage{optidef}
+
 
 \usepackage[spanish]{babel}
 
@@ -55,16 +57,68 @@
   \hrulefill
 
  \end{center}
-\section{Introducción:}
+\section{Introducción}
 Para realizar nustro trabajo práctico final elegimos el paper \textit{``An Asymmetric Multi-Item Auction with Quantity Discounts Applied to Internet Service Procurement in Buenos Aires Public Schools"} que vimos contado en la presentación \textit{``Mathematical programming in an auction to provide Internet connections in Buenos Aires City schools"} utilizando el modelo polinomial allí propuesto e implementamos varias instancias de prueba armadas artificialmente de manera que tengan resultados variados. Para hallar los óptimos utilizamos el software SCIP mientras que para los casos donde alguna unidad de competencia se reparte entre más de una firma implementamos una heurística en Python para decidir el reparto. 
 
 \bigskip
-En la sección 2 describimos las distintas instancias implementadas y en la sección 3 repasamos los resultados obtenidos.
-    
+En la sección 2 describimos el modelo de programación lineal utilizado y en la sección 3 las distintas instancias implementadas. En la sección 4 repasamos los resultados obtenidos.
+
 \bigskip
- \section{Instancias:}
+\section{Modelo}
+
+\subsection{Parámetros}
+\begin{itemize}
+    \item $C$: Conjunto de ISP's.
+    \item $R$: Conjunto de regiones.
+    \item $T$: Rangos de cantidades de escuelas asignadas.
+    \item $max\_t$: Cota superior para cada intervalo de precio.
+    \item $min\_t$: Cota inferior para cada intervalo de precio.
+    \item $E_r, \ r \in R$: Escuelas por cada región.
+    \item $p_{ij}, \ i \in R, j \in C$: Indica si la compañía $j$ está en la región $i$.
+    \item $c_{ij}, \ i \in T, j \in C$: Costo unitario por escuela en el rango $i$ ofrecido por la compañía $j$.
+\end{itemize}
+
+\subsection{Variables}
+\begin{itemize}
+    \item $x_{ij} \in \mathbb{Z}_{\geq 0}, \ i \in R, j \in C$: Cantidad de escuelas asignadas en la región $i$ a la compañía $j$.
+    \item $y_{ij} \in \{0,1\}, \ i \in C, j \in T$: Rango de precio $j$ asignado a la compañía $i$.
+    \item $z_{ij} \in \mathbb{Z}_{\geq 0}, \ i \in C, j \in T$: Cantidad de escuelas asignadas a la compañía $i$ en el rango $j$.
+\end{itemize}
+
+\subsection{Formulación polinomial}
+
+\begin{mini}
+  {} {\sum_{i \in C} \sum_{j \in T} c_{ji} * z_{ij}} {} {}
+  \addConstraint{\sum_{i \in C} x_{ji} =  E_r[j] \qquad \qquad \qquad \qquad \qquad \qquad \forall j \in R}
+  \addConstraint{\sum_{j \in R} x_{ij} \geq min\_t[t] - (1 - y_{ij}) * M \qquad \forall i \in C, \quad \forall t \in T}
+  \addConstraint{\sum_{j \in R} x_{ij} \leq max\_t[t] + (1 - y_{ij}) * M \qquad \forall i \in C, \quad \forall t \in T}
+  \addConstraint{\sum_{t \in T} y_{ij} = 1 \qquad \qquad \qquad \qquad \qquad \qquad  \qquad \forall i \in C}
+  \addConstraint{z_{ij} \geq \sum_{j \in R} x_{ij} - (1 - y_{ij}) * M \qquad \qquad \ \ \ \forall i \in C, \quad \forall t \in T}
+  \addConstraint{x_{ij} \leq  p_{ij} * M \qquad \qquad \qquad \qquad \qquad \ \ \ \ \ \forall i \in C, \quad \forall j \in R}
+  \addConstraint{& z_{ij} = \sum_{j \in R} x_{ij} \qquad \qquad \qquad \qquad \qquad \qquad \forall i \in C, \quad \forall t \in T}
+\end{mini}
+
+donde $M$ representa una constante ``grande".
+\subsection{Búsqueda de óptimos alternativos}
+
+Para las instancias 2 y 3 queríamos buscar óptimos alternativos, para eso lo que hicimos fue agregar variables, parámetros y restricciones de manera tal que las soluciones que ya conocíamos queden por fuera de nuestro conjunto factible. Lo hicimos de la siguiente manera; Sea $x_{ij} = a_{ij}$ la solución óptima para cada compañía $i \in I$ y cada región $j \in J$, y agregamos dos variables binarias $\omega_{ji}$ y $\omega^{'}_{ji}$ por cada $a_{ji}$ y las siguientes restricciones:
+\bigskip
+\[
+x_{ji} \geq (a_{ji} + 1)\omega_{ji}, \qquad \qquad \qquad \forall i \in I, j \in J : a_{ij} \neq 0
+\]
+
+\[
+M - x_{ji} \geq (M - (a_{ji} - 1))\omega^{'}_{ji}, \quad \forall i \in I, j \in J : a_{ij} \neq 0
+\]
+
+\[
+ \sum_{a_{ji} \neq 0}{(\omega_{ji} + \omega^{'}_{ji})}\geq 1
+\]
+
+\bigskip
+\section{Instancias}
  
-    En total son 4 ejemplos. En la \textbf{instancia 1} modificamos el ejemplo presentado en clase de manera que tenga al menos dos soluciones. El cuadro de tarifas para esta instancia quedó del siguiente modo:
+En total son 4 ejemplos. En la \textbf{instancia 1} modificamos el ejemplo presentado en clase de manera que tenga al menos dos soluciones. El cuadro de tarifas para esta instancia se puede ver en el Cuadro 1.
 
 \bigskip
 
@@ -79,14 +133,14 @@ En la sección 2 describimos las distintas instancias implementadas y en la secc
  40-60 & \$4096 & \$1916 & \$1991 & \$1352 \\
  60-80 & \$4096 & \$1810 & \$1075 & \$1267 \\
  80-100 & \$4096 & \$1597 & \$890 & \$1132 \\
- 100-150 & \$4227 & \$1331 & \-- & \$1132 \\
- 150-200 & \$3992 & \$1091 & \-- & \-- \\
- 200-300 & \$3757 & \$1038 & \-- & \-- \\
- 300-400 & \$3287 & \$785 & \-- & \-- \\
- 400-500 & \$2818 & \$785 & \-- & \-- \\
- 500-600 & \$2348 & \$785 & \-- & \-- \\
- 600-700 & \$1878 & \-- & \-- & \-- \\
- 700-800 & \$843.5375 & \-- & \-- & \-- \\ [1ex] 
+ 100-150 & \$4227 & \$1331 & -- & \$1132 \\
+ 150-200 & \$3992 & \$1091 & -- & -- \\
+ 200-300 & \$3757 & \$1038 & -- & -- \\
+ 300-400 & \$3287 & \$785 & -- & -- \\
+ 400-500 & \$2818 & \$785 & -- & -- \\
+ 500-600 & \$2348 & \$785 & -- & -- \\
+ 600-700 & \$1878 & -- & -- & -- \\
+ 700-800 & \$843.5375 & -- & -- & -- \\ [1ex] 
  \hline
 \end{tabular}
 \caption{Instancia 1}
@@ -94,11 +148,11 @@ En la sección 2 describimos las distintas instancias implementadas y en la secc
 \end{table}
 
 \\
-En la \textbf{instancia 2} sacamos la primer solución de la instancia anterior y vimos que se alcanzaba el mismo valor de la función objetivo pero con otro minimizador.
+En la \textbf{instancia 2} sacamos la primera solución de la instancia anterior y vimos que se alcanzaba el mismo valor de la función objetivo pero con otro minimizador.
 \\
-En la \textbf{instancia 3} sacamos la solución del primero y el segundo viendo que se alcanzaba un óptimo más alto pero de manera tal que más de una empresa participara en la misma unidad de competencia. Aprovechamos dicha instancia para correr nuestro algoritmo de asignación al interior de la misma Unidad de Competencia.
+En la \textbf{instancia 3} sacamos la solución del primero y el segundo viendo que se alcanzaba un óptimo más alto pero de manera tal que más de una empresa participara en la misma unidad de competencia. Aprovechamos dicha instancia para correr nuestro algoritmo de asignación al interior de una misma Unidad de Competencia.
 \\
-Finalmente, en la \textbf{instancia 4} armamos un ejemplo sustancialmente distinto (ver cuadro 2) en el cual las empresas comparten unidades de competencia sin la necesidad de remover óptimos. En este caso, también utilizamos la heurística presentada en el paper para repartir escuelas dentro de una misma unidad de competencia. Para más detalles sobre la implementación, se puede ver \texttt{unidades\_compartidas.py}.
+Finalmente, en la \textbf{instancia 4} armamos un ejemplo sustancialmente distinto (ver cuadro 2) en el cual las empresas comparten unidades de competencia sin la necesidad de remover óptimos. En este caso, también utilizamos la heurística presentada en el paper para repartir escuelas dentro de una misma unidad de competencia. Para más detalles sobre la implementación, se puede ver el archivo \texttt{unidades\_compartidas.py}.
 
 \begin{table}[h!]
 \centering
@@ -150,12 +204,12 @@ Luego de correr nuestro programa con la  \textbf{instancia 1} obtuvimos que la c
 \label{table:1}
 \end{table}
 
-En cambio en la \textbf{instancia 2} sin la solución de la primera, a la compañía 1 no se le asignó ninguna escuela ya que todas fueron repartidas entre las demás. Obteniendo el mismo valor óptimo alcanzado por la función objetivo de \$$674830$ con lo cuál estamos ante el caso de óptimos alternativos.
+En cambio en la \textbf{instancia 2} sin la solución de la primera, a la compañía 1 no se le asignó ninguna escuela ya que todas fueron repartidas entre las demás. Obteniendo el mismo valor óptimo alcanzado por la función objetivo de \$$674830$ con lo cuál estamos ante el caso de óptimos alternativos. Ver Cuadro 4.
 
 \bigskip
-En la \textbf{instancia 3} sin la solución de las instancias uno y dos, nos dió un óptimo más alto (\$681898.775) con lo cuál ya no hablamos de un caso de óptimo múltiple, sin embargo aprovechamos para utilizar nuestro algoritmo que recorre de Oeste a Este asignando qué escuela va para cada empresa en los casos que las Unidades de competencia se encuentran repartidas. Para ésto asumimos que las regiónes vienen numeradas de Oeste a Este.
-\\Ver cuadro 3.
-En el caso de la textbf{instancia 3}, todas las unidades se reparten entre más de una compañía, del siguiente modo:
+En la \textbf{instancia 3} sin la solución de las instancias uno y dos, nos dió un óptimo más alto (\$681898.775) con lo cuál ya no hablamos de un caso de óptimo múltiple, sin embargo aprovechamos para utilizar nuestro algoritmo que recorre de Oeste a Este asignando qué escuela va para cada empresa en los casos que las Unidades de competencia se encuentran repartidas. Para ésto asumimos que las regiónes vienen numeradas de Oeste a Este (1=más occidental, ..., n=más oriental).
+
+En el caso de la \textbf{instancia 3}, todas las unidades se reparten entre más de una compañía, del siguiente modo:
 
 \textit{En la unidad 1 se asignan a la empresa 1 las 247 escuelas del oeste.\\
 En la unidad 2 se asignan a la empresa 1 las 286 escuelas del este. En la unidad 3 es indistinto qué escuelas se asignen al este y cuales al oeste, ya que la misma está en ambas unidades.\\
@@ -163,14 +217,14 @@ En la unidad 4 se asignan a la empresa 1 las 21 escuelas del este. En la unidad 
 Finalmente, en la unidad 6 se asignan a la empresa 1 las 60 escuelas del este.`}
 
 
-\\
+\bigskip
+
 
 En la \textbf{instancia 4} obtuvimos un óptimo (\$853900) en el cuál más de una empresa participe en la misma Unidad de Competencia sin la necesidad de remover otros resultados previamente. 
 \\Ver Cuadro 4.
 En este caso, corriendo nuestro algoritmo que recorre de Oeste a Este asignando qué escuela va para cada empresa, las unidades compartidas se reparten del siguiente modo:
 
-\textit{Las unidades 4 y 7 fueron repartidas entre más de una compañía. En la unidad 4 se asignan a la empresa 3 las 23 escuelas del este.\\
-En la unidad 7 se asignan a la empresa 4 las 119 escuelas del este.}
+\textit{Las unidades 4 y 7 fueron repartidas entre más de una compañía. En la unidad 4 se asignan a la empresa 3 las 23 escuelas del este. En la unidad 7 se asignan a la empresa 4 las 119 escuelas del este.}
 \subsection{Tiempos de corrida:}
 
 \begin{itemize}
